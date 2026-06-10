@@ -1,0 +1,23 @@
+.main-layout {
+  display: flex;
+  min-height: 100dvh;
+  background: #111212;
+  color: #f4f4f4;
+  font-family: 'Instrument Sans Variable', ui-sans-serif, system-ui, sans-serif;
+}
+
+.main-layout-content {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 8px 8px 0;
+}
+
+@media (max-width: 860px) {
+  .main-layout {
+    flex-direction: column;
+  }
+
+  .main-layout-content {
+    padding: 0 8px 8px;
+  }
+}

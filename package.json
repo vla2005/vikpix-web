@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.2.9",
+    "@fontsource-variable/instrument-sans": "^5.2.8",
     "@radix-ui/react-slot": "^1.2.5",
     "@tailwindcss/vite": "^4.3.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "js-cookie": "^3.0.8",
     "lucide-react": "^1.17.0",
     "radix-ui": "^1.5.0",
     "react": "^19.2.6",

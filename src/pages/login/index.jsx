@@ -1,15 +1,15 @@
+import '../register/style.css'
 import './style.css'
 import { useEffect, useState } from 'react'
 import { AlertCircle, CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { login } from '@/lib/api'
 
 const backgroundVideo = 'https://reactpix.com/images/reactpix.webm'
 
-const apiUrl = import.meta.env.VITE_API_URL
-
-function RegisterPage() {
+function LoginPage() {
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -37,58 +37,36 @@ function RegisterPage() {
 
     const formData = new FormData(form)
 
-    const name = formData.get('name')
-    const userName = formData.get('userName')
     const email = formData.get('email')
     const password = formData.get('password')
-    const confirmPassword = formData.get('confirmPassword')
+    const rememberMe = formData.get('rememberMe') === 'on'
 
-    if (password !== confirmPassword) {
-      setError('As senhas nao coincidem.')
-      setLoading(false)
-      return
-    }
-
-    const payload = {
-      name,
-      userName,
-      email,
-      password
-    }
-
-    try{
-      const response = await fetch(`${apiUrl}/users`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
+    try {
+      await login({
+        email,
+        password,
+        rememberMe,
       })
 
-      const responseText = await response.text()
-      const data = responseText ? JSON.parse(responseText) : null
-
-      if(!response.ok) {
-        throw new Error(data?.message || 'Erro ao criar conta')
-      }
-
       form.reset()
-      setSuccess('Conta criada com sucesso.')
-
-      } catch (error) {
-        setError(error.message)
-      } finally {
-        setLoading(false)
+      setSuccess('Login realizado com sucesso.')
+      window.setTimeout(() => {
+        window.location.assign('/dashboard')
+      }, 900)
+    } catch (error) {
+      setError(error.message || 'Erro ao fazer login.')
+    } finally {
+      setLoading(false)
     }
-
   }
+
   return (
-    <main className="register-page" aria-label="Cadastro ReactPix">
+    <main className="register-page" aria-label="Login ReactPix">
       <div className="scene-grid" aria-hidden="true">
         <svg className="auth-grid" aria-hidden="true">
           <defs>
             <pattern
-              id="auth-landing-split-grid"
+              id="auth-landing-login-grid"
               width="52"
               height="52"
               patternUnits="userSpaceOnUse"
@@ -98,7 +76,7 @@ function RegisterPage() {
               <path d="M.5 52V.5H52" fill="none" strokeDasharray="0" />
             </pattern>
           </defs>
-          <rect width="100%" height="100%" fill="url(#auth-landing-split-grid)" />
+          <rect width="100%" height="100%" fill="url(#auth-landing-login-grid)" />
           <svg x="-1" y="-1" className="auth-grid-squares">
             <rect width="51" height="51" x="53" y="989" opacity="0.19825298472715075" />
             <rect width="51" height="51" x="157" y="1405" opacity="0.18736062109994236" />
@@ -141,7 +119,7 @@ function RegisterPage() {
         >
           {error ? <AlertCircle /> : <CheckCircle2 />}
           <div>
-            <strong>{error ? 'Não foi possível criar a conta' : 'Conta criada'}</strong>
+            <strong>{error ? 'Não foi possível entrar' : 'Login realizado'}</strong>
             <span>{error || success}</span>
           </div>
         </div>
@@ -153,14 +131,14 @@ function RegisterPage() {
             <span></span>
             <span></span>
           </span>
-          <span>VikPix</span>
+          <span>ReactPix</span>
         </div>
 
         <div className="register-layout">
-          <form className="signup-card" onSubmit={handleSubmit}>
+          <form className="signup-card login-card" onSubmit={handleSubmit}>
             <header>
-              <h1>Crie sua conta</h1>
-              <p>Preencha seus dados para começar no ReactPix.</p>
+              <h1>Acesse sua conta</h1>
+              <p>Entre com seu e-mail e senha para continuar.</p>
             </header>
 
             <div className="social-stack">
@@ -183,36 +161,29 @@ function RegisterPage() {
             </div>
 
             <Label>
-              <span>Nome</span>
-              <Input name="name" autoFocus type="text" placeholder="Nome completo" />
-            </Label>
-
-            <Label>
-              <span>Username</span>
-              <Input name="userName" type="text" placeholder="seu_username" />
-            </Label>
-
-            <Label>
               <span>E-mail</span>
-              <Input name="email" type="email" placeholder="email@example.com" />
+              <Input name="email" autoFocus type="email" placeholder="email@example.com" />
             </Label>
 
             <Label>
-              <span>Senha</span>
+              <span className="login-label-row">
+                Senha
+                <a href="/login">Esqueceu sua senha?</a>
+              </span>
               <Input name="password" type="password" placeholder="Senha" />
             </Label>
 
-            <Label>
-              <span>Confirmar senha</span>
-              <Input name="confirmPassword" type="password" placeholder="Confirmar senha" />
-            </Label>
+            <label className="remember-row">
+              <input name="rememberMe" type="checkbox" />
+              <span>Lembrar de mim</span>
+            </label>
 
             <Button className="create-button" type="submit" disabled={loading}>
-              {loading ? 'Criando conta...' : 'Criar conta'}
+              {loading ? 'Entrando...' : 'Entrar'}
             </Button>
 
             <p className="login-copy">
-              Já tem conta? <a href="/login">Entrar</a>
+              Ainda não tem conta? <a href="/register">Criar conta</a>
             </p>
           </form>
 
@@ -255,4 +226,4 @@ function RegisterPage() {
   )
 }
 
-export default RegisterPage
+export default LoginPage
