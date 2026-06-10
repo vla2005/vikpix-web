@@ -1,11 +1,9 @@
+@reference "../../index.css";
+
 .sidebar {
-  display: flex;
+  @apply flex min-h-dvh flex-col bg-[#191a1a] text-[#f4f4f4];
   width: 254px;
-  min-height: 100dvh;
   flex: 0 0 254px;
-  flex-direction: column;
-  background: #191a1a;
-  color: #f4f4f4;
   padding: 24px 14px 18px;
   transition: width 180ms ease, flex-basis 180ms ease, padding 180ms ease;
 }
@@ -17,30 +15,17 @@
 }
 
 .sidebar-brand {
+  @apply items-center gap-2.5 px-2 py-0;
   display: grid;
   grid-template-columns: 34px 1fr auto;
-  align-items: center;
-  gap: 10px;
-  padding: 0 8px;
 }
 
 .sidebar.is-collapsed .sidebar-brand {
-  display: flex;
-  justify-content: center;
-  padding: 0;
+  @apply flex justify-center p-0;
 }
 
 .sidebar-logo-button {
-  position: relative;
-  display: grid;
-  width: 32px;
-  height: 32px;
-  place-items: center;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  color: #111516;
-  cursor: pointer;
+  @apply relative grid size-8 cursor-pointer place-items-center border-0 bg-transparent p-0 text-[#111516];
 }
 
 .sidebar.is-collapsed .sidebar-logo-button::before {
@@ -87,13 +72,7 @@
 }
 
 .sidebar-logo {
-  position: relative;
-  display: grid;
-  width: 32px;
-  height: 32px;
-  place-items: center;
-  border-radius: 9px;
-  background: #22b9c9;
+  @apply relative grid size-8 place-items-center rounded-[9px] bg-[#22b9c9];
 }
 
 .sidebar-logo::before {
@@ -122,11 +101,7 @@
 }
 
 .sidebar-open-icon {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  color: #101313;
-  opacity: 0;
+  @apply absolute size-[18px] text-[#101313] opacity-0;
   transition: opacity 140ms ease;
 }
 
@@ -140,8 +115,7 @@
 }
 
 .sidebar-brand strong {
-  font-size: 15px;
-  font-weight: 800;
+  @apply text-[15px] font-extrabold;
 }
 
 .sidebar.is-collapsed .sidebar-brand strong,
@@ -150,38 +124,23 @@
 }
 
 .sidebar-collapse {
-  display: grid;
-  width: 20px;
-  height: 20px;
-  place-items: center;
-  border: 0;
-  background: transparent;
-  color: #d5d6d7;
-  cursor: pointer;
+  @apply grid size-5 cursor-pointer place-items-center border-0 bg-transparent text-[#d5d6d7];
 }
 
 .sidebar-collapse svg {
-  width: 16px;
-  height: 16px;
+  @apply size-4;
 }
 
 .sidebar-nav {
-  display: grid;
-  gap: 8px;
-  margin-top: 36px;
+  @apply mt-9 grid gap-2;
 }
 
 .sidebar.is-collapsed .sidebar-nav {
-  gap: 14px;
-  margin-top: 36px;
+  @apply mt-9 gap-[14px];
 }
 
 .sidebar-nav p {
-  margin: 0 0 2px;
-  padding: 0 7px;
-  color: #d9dcde;
-  font-size: 12px;
-  font-weight: 700;
+  @apply mt-0 mr-0 mb-0.5 ml-0 px-[7px] py-0 text-xs font-bold text-[#d9dcde];
 }
 
 .sidebar.is-collapsed .sidebar-nav p {
@@ -189,16 +148,7 @@
 }
 
 .sidebar-link {
-  display: flex;
-  min-height: 40px;
-  align-items: center;
-  gap: 10px;
-  padding: 0 9px;
-  border-radius: 7px;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 700;
-  text-decoration: none;
+  @apply flex min-h-10 items-center gap-2.5 rounded-[7px] px-[9px] py-0 text-sm font-bold text-white no-underline;
   transition: background 160ms ease, color 160ms ease;
 }
 
@@ -216,8 +166,7 @@
 }
 
 .sidebar-link svg {
-  width: 18px;
-  height: 18px;
+  @apply size-[18px];
   stroke-width: 2;
 }
 
@@ -226,34 +175,20 @@
 }
 
 .sidebar-footer {
-  display: grid;
-  gap: 18px;
-  margin-top: auto;
-  padding: 0 7px;
+  @apply mt-auto grid gap-[18px] px-[7px] py-0;
 }
 
 .sidebar.is-collapsed .sidebar-footer {
-  justify-items: center;
-  gap: 20px;
-  padding: 0;
+  @apply justify-items-center gap-5 p-0;
 }
 
 .theme-button,
 .user-button {
-  display: flex;
-  align-items: center;
-  border: 0;
-  background: transparent;
-  color: #ffffff;
-  cursor: pointer;
-  font: inherit;
+  @apply flex cursor-pointer items-center border-0 bg-transparent text-white font-[inherit];
 }
 
 .theme-button {
-  gap: 9px;
-  padding: 0;
-  font-size: 14px;
-  font-weight: 700;
+  @apply gap-[9px] p-0 text-sm font-bold;
 }
 
 .sidebar.is-collapsed .theme-button {
@@ -263,8 +198,7 @@
 }
 
 .theme-button svg {
-  width: 16px;
-  height: 16px;
+  @apply size-4;
 }
 
 .sidebar.is-collapsed .theme-button span {
@@ -272,11 +206,8 @@
 }
 
 .user-button {
-  width: 100%;
-  gap: 10px;
-  min-height: 40px;
-  padding: 4px 6px;
-  border-radius: 8px;
+  @apply min-h-10 w-full gap-2.5 rounded-lg px-1.5 py-1;
+  overflow: hidden;
   transition: background 160ms ease;
 }
 
@@ -293,16 +224,7 @@
 }
 
 .user-avatar {
-  display: grid;
-  width: 32px;
-  height: 32px;
-  place-items: center;
-  border-radius: 999px;
-  background: #3b3c3f;
-  color: #ffffff;
-  font-size: 15px;
-  font-weight: 700;
-  overflow: hidden;
+  @apply grid size-8 shrink-0 place-items-center overflow-hidden rounded-full bg-[#3b3c3f] text-[15px] font-bold text-white;
 }
 
 .sidebar.is-collapsed .user-avatar {
@@ -311,16 +233,12 @@
 }
 
 .user-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  @apply size-full object-cover;
 }
 
 .user-button strong {
-  flex: 1;
-  text-align: left;
-  font-size: 14px;
-  font-weight: 800;
+  @apply block min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-left text-sm font-extrabold;
+  max-width: 132px;
 }
 
 .sidebar.is-collapsed .user-button strong,
@@ -329,27 +247,17 @@
 }
 
 .user-button svg {
-  width: 16px;
-  height: 16px;
+  @apply size-4 shrink-0;
 }
 
 .sidebar-user-menu {
+  @apply min-w-56 overflow-hidden rounded-[10px] border border-[#2f3030] bg-[#191a1a] p-0 text-white;
   width: 224px;
-  min-width: 224px;
-  overflow: hidden;
-  border: 1px solid #2f3030;
-  border-radius: 10px;
-  background: #191a1a;
-  color: #ffffff;
-  padding: 0;
   box-shadow: 0 14px 32px rgba(0, 0, 0, 0.36);
 }
 
 .sidebar-user-menu-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
+  @apply flex items-center gap-2.5 p-3;
 }
 
 .sidebar-user-menu-header .user-avatar {
@@ -371,7 +279,7 @@
 }
 
 .sidebar-user-menu-header div {
-  min-width: 0;
+  @apply min-w-0;
 }
 
 .sidebar-user-menu-header div strong,
@@ -383,17 +291,11 @@
 }
 
 .sidebar-user-menu-header div strong {
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 800;
-  line-height: 1.25;
+  @apply text-sm leading-tight font-extrabold text-white;
 }
 
 .sidebar-user-menu-header div span {
-  margin-top: 2px;
-  color: #8d9297;
-  font-size: 13px;
-  font-weight: 500;
+  @apply mt-0.5 text-[13px] font-medium text-[#8d9297];
 }
 
 .sidebar-user-menu-separator {
@@ -403,20 +305,11 @@
 }
 
 .sidebar-user-menu-item {
-  display: flex;
+  @apply flex h-9 items-center gap-3 rounded-[5px] px-3 py-0 text-sm font-bold text-white outline-none;
   width: calc(100% - 12px);
-  height: 36px;
-  align-items: center;
-  gap: 12px;
   margin: 4px 6px;
-  border-radius: 5px;
-  padding: 0 12px;
   background: transparent !important;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 700;
   cursor: pointer;
-  outline: none;
   transition: background 150ms ease, color 150ms ease;
 }
 

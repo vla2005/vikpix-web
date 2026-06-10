@@ -1,23 +1,19 @@
+@reference "../../index.css";
+
 .main-layout {
-  display: flex;
-  min-height: 100dvh;
-  background: #111212;
-  color: #f4f4f4;
-  font-family: 'Instrument Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  @apply flex min-h-dvh bg-[#111212] text-[#f4f4f4] font-sans;
 }
 
 .main-layout-content {
-  flex: 1;
-  min-width: 0;
-  padding: 8px 8px 8px 0;
+  @apply min-w-0 flex-1 py-2 pr-2 pl-0;
 }
 
 @media (max-width: 860px) {
   .main-layout {
-    flex-direction: column;
+    @apply flex-col;
   }
 
   .main-layout-content {
-    padding: 0 8px 8px;
+    @apply px-2 pt-0 pb-2;
   }
 }

@@ -1,23 +1,16 @@
+@reference "../../index.css";
+
 .register-page {
-  position: relative;
-  min-height: 100dvh;
-  overflow-x: hidden;
-  overflow-y: auto;
-  background: #0b0d0e;
-  color: #f4f4f4;
+  @apply relative min-h-dvh overflow-x-hidden overflow-y-auto bg-[#0b0d0e] text-[#f4f4f4];
 }
 
 .scene-grid,
 .scene-shade {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
+  @apply pointer-events-none fixed inset-0;
 }
 
 .scene-grid {
-  z-index: 0;
-  overflow: hidden;
-  color: rgba(156, 163, 175, 0.3);
+  @apply z-0 overflow-hidden text-gray-400/30;
 }
 
 .auth-grid {
@@ -46,45 +39,30 @@
 }
 
 .register-toast {
-  position: fixed;
-  top: 24px;
-  right: 24px;
-  z-index: 10;
-  display: grid;
+  @apply fixed top-6 right-6 z-10 grid gap-2.5;
   grid-template-columns: auto 1fr;
-  gap: 10px;
   width: min(360px, calc(100vw - 32px));
-  padding: 14px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  background: rgba(15, 17, 18, 0.92);
+  @apply rounded-xl border border-white/10 bg-[rgba(15,17,18,0.92)] px-4 py-3.5;
   box-shadow: 0 18px 54px rgba(0, 0, 0, 0.44);
   backdrop-filter: blur(14px);
   animation: toast-in 180ms ease-out;
 }
 
 .register-toast svg {
-  width: 18px;
-  height: 18px;
-  margin-top: 1px;
+  @apply mt-px size-[18px];
 }
 
 .register-toast strong,
 .register-toast span {
-  display: block;
+  @apply block;
 }
 
 .register-toast strong {
-  color: #f4f4f4;
-  font-size: 13px;
-  line-height: 1.2;
+  @apply text-[13px] leading-[1.2] text-[#f4f4f4];
 }
 
 .register-toast span {
-  margin-top: 3px;
-  color: #b7babd;
-  font-size: 13px;
-  line-height: 1.35;
+  @apply mt-[3px] text-[13px] leading-[1.35] text-[#b7babd];
 }
 
 .register-toast-error {
@@ -116,34 +94,17 @@
 }
 
 .register-shell {
-  position: relative;
-  z-index: 2;
+  @apply relative z-[2] flex min-h-dvh flex-col justify-center py-8;
   width: min(1020px, calc(100% - 40px));
-  height: 100dvh;
-  margin: 0 auto;
-  padding: 32px 0;
-  box-sizing: border-box;
+  @apply mx-auto box-border;
 }
 
 .brand-mark {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 28px 8px;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 700;
+  @apply mb-7 ml-2 inline-flex items-center gap-2.5 self-start text-sm font-bold text-white;
 }
 
 .brand-icon {
-  position: relative;
-  display: inline-flex;
-  width: 24px;
-  height: 24px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 7px;
-  background: #e8e8e8;
+  @apply relative inline-flex size-6 items-center justify-center rounded-[7px] bg-[#e8e8e8];
   transform: rotate(45deg);
 }
 
@@ -158,11 +119,7 @@
 }
 
 .brand-icon span {
-  display: block;
-  width: 4px;
-  height: 9px;
-  border-radius: 999px;
-  background: #121314;
+  @apply block h-[9px] w-1 rounded-full bg-[#121314];
   transform: rotate(-45deg) translate(3px, 0);
 }
 
@@ -172,18 +129,13 @@
 }
 
 .register-layout {
-  display: grid;
+  @apply grid w-full items-center;
   grid-template-columns: clamp(380px, 30vw, 430px) minmax(0, 512px);
   gap: 96px;
-  align-items: center;
 }
 
 .signup-card {
-  width: 100%;
-  padding: 26px 28px;
-  box-sizing: border-box;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 14px;
+  @apply box-border w-full rounded-[14px] border border-white/10 px-7 py-[26px];
   background:
     linear-gradient(160deg, rgba(29, 30, 31, 0.84), rgba(19, 20, 21, 0.8)),
     rgba(21, 22, 23, 0.78);
@@ -194,19 +146,15 @@
 }
 
 .signup-card header {
-  margin-bottom: 26px;
+  @apply mb-[26px];
 }
 
 .register-alert {
-  margin: 0 0 18px;
-  border-radius: 10px;
-  background: rgba(12, 13, 14, 0.58);
-  color: #eeeeee;
+  @apply mt-0 mr-0 mb-[18px] ml-0 rounded-[10px] bg-[rgba(12,13,14,0.58)] text-[#eeeeee];
 }
 
 .register-alert svg {
-  width: 16px;
-  height: 16px;
+  @apply size-4;
 }
 
 .register-alert [data-slot='alert-title'] {
@@ -238,11 +186,7 @@
 }
 
 .signup-card h1 {
-  margin: 0 0 8px;
-  color: #eeeeee;
-  font-size: 26px;
-  line-height: 1.08;
-  font-weight: 800;
+  @apply mt-0 mb-2 text-[26px] leading-[1.08] font-extrabold text-[#eeeeee];
   letter-spacing: -0.02em;
 }
 
@@ -255,35 +199,21 @@
 }
 
 .signup-card header p {
-  font-size: 16px;
+  @apply text-base;
 }
 
 .social-stack {
-  display: grid;
-  gap: 12px;
+  @apply grid gap-3;
 }
 
 .social-button,
 .create-button,
 .signup-card input {
-  width: 100%;
-  height: 42px;
-  border-radius: 20px;
-  font: inherit;
-  box-sizing: border-box;
+  @apply box-border h-[42px] w-full rounded-[20px] font-[inherit];
 }
 
 .social-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.075);
-  background: rgba(255, 255, 255, 0.035);
-  color: #d6d6d6;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
+  @apply inline-flex cursor-pointer items-center justify-center gap-2.5 border border-white/10 bg-white/[0.035] text-sm font-bold text-[#d6d6d6];
   transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
 }
 
@@ -299,30 +229,24 @@
 }
 
 .youtube-icon {
-  color: #ff1b1b;
-  font-size: 13px;
+  @apply text-[13px] text-[#ff1b1b];
 }
 
 .twitch-icon {
-  color: #8a55ff;
-  font-size: 17px;
+  @apply text-[17px] text-[#8a55ff];
 }
 
 .kick-icon {
-  color: #28ff20;
-  font-size: 19px;
-  font-weight: 900;
-  line-height: 1;
+  @apply text-[19px] leading-none font-black text-[#28ff20];
+}
+
+.google-icon {
+  @apply size-6 shrink-0;
 }
 
 .email-divider {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  margin: 20px 0 2px;
-  font-size: 12px;
+  @apply relative mt-5 mb-0.5 flex justify-center text-xs text-[#8b8c8f];
   letter-spacing: 0.28em;
-  color: #8b8c8f;
 }
 
 .email-divider::before {
@@ -336,31 +260,19 @@
 }
 
 .email-divider span {
-  position: relative;
-  padding: 0 12px;
-  background: #191a1b;
+  @apply relative bg-[#191a1b] px-3 py-0;
 }
 
 .signup-card label {
-  display: block;
-  margin-top: 12px;
+  @apply mt-3 block;
 }
 
 .signup-card label span {
-  display: block;
-  margin-bottom: 6px;
-  color: #d9d9d9;
-  font-size: 14px;
-  font-weight: 700;
+  @apply mb-1.5 block text-sm font-bold text-[#d9d9d9];
 }
 
 .signup-card input {
-  border: 1px solid rgba(255, 255, 255, 0.075);
-  border-radius: 8px;
-  background: rgba(12, 13, 14, 0.42);
-  color: #eeeeee;
-  padding: 0 16px;
-  outline: none;
+  @apply rounded-lg border border-white/10 bg-[rgba(12,13,14,0.42)] px-4 py-0 text-[#eeeeee] outline-none;
   transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
 
@@ -371,14 +283,7 @@
 }
 
 .create-button {
-  margin-top: 28px;
-  border: 0;
-  border-radius: 21px;
-  background: #27b8c9;
-  color: #071315;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
+  @apply mt-7 cursor-pointer rounded-[21px] border-0 bg-[#27b8c9] text-sm font-medium text-[#071315];
   transition: transform 180ms ease, filter 180ms ease;
 }
 
@@ -388,53 +293,35 @@
 }
 
 .login-copy {
-  margin: 24px 0 0;
-  text-align: center;
-  font-size: 14px;
+  @apply mt-6 mr-0 mb-0 ml-0 text-center text-sm;
 }
 
 .login-copy a {
-  color: #d7d7d7;
+  @apply text-[#d7d7d7];
   text-underline-offset: 3px;
 }
 
 .showcase {
-  padding-top: 82px;
+  padding-top: 0;
 }
 
 .eyebrow {
-  margin: 0 0 10px;
-  color: #15d8ef;
-  font-size: 14px;
-  font-weight: 800;
+  @apply mt-0 mb-2.5 text-sm font-extrabold text-[#15d8ef];
   letter-spacing: 0.08em;
 }
 
 .showcase h2 {
-  max-width: 560px;
-  margin: 0 0 12px;
-  color: #eeeeee;
-  font-size: 30px;
-  line-height: 1.23;
-  font-weight: 800;
+  @apply mt-0 mb-3 max-w-[560px] text-[30px] leading-[1.23] font-extrabold text-[#eeeeee];
   letter-spacing: -0.035em;
   text-wrap: balance;
 }
 
 .showcase-copy {
-  max-width: 550px;
-  margin: 0 0 26px;
-  font-size: 14px;
-  line-height: 1.5;
+  @apply mt-0 mb-[26px] max-w-[550px] text-sm leading-normal;
 }
 
 .stream-card {
-  position: relative;
-  height: 288px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  background: rgba(12, 15, 16, 0.6);
+  @apply relative h-72 overflow-hidden rounded-xl border border-white/10 bg-[rgba(12,15,16,0.6)];
   box-shadow:
     inset 0 0 42px rgba(37, 194, 212, 0.28),
     0 0 34px rgba(37, 194, 212, 0.09),
@@ -442,13 +329,11 @@
 }
 
 .stream-video {
-  position: absolute;
+  @apply absolute object-cover opacity-[0.82];
   inset: 16px 42px 20px;
   width: calc(100% - 84px);
   height: calc(100% - 36px);
-  object-fit: cover;
   border-radius: 9px;
-  opacity: 0.82;
   filter: saturate(1.05) brightness(0.68);
   box-shadow: 0 0 22px rgba(19, 210, 232, 0.32);
 }
@@ -462,88 +347,52 @@
 
 .stream-panel,
 .donation-bubble {
-  position: absolute;
-  z-index: 2;
-  border: 1px solid rgba(39, 184, 201, 0.24);
-  background: rgba(5, 11, 13, 0.8);
+  @apply absolute z-[2] border border-[#27b8c9]/25 bg-[rgba(5,11,13,0.8)];
   backdrop-filter: blur(10px);
 }
 
 .stream-panel {
-  top: 50px;
-  left: 174px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: 158px;
-  height: 24px;
-  padding: 0 8px;
-  border-radius: 5px;
-  color: #dce7e8;
-  font-size: 8px;
+  @apply top-[50px] left-[174px] flex h-6 w-[158px] items-center gap-1.5 rounded-[5px] px-2 py-0 text-[8px] text-[#dce7e8];
 }
 
 .panel-dot,
 .status-bar i {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: #16d2c4;
+  @apply size-2 rounded-full bg-[#16d2c4];
   box-shadow: 0 0 10px rgba(22, 210, 196, 0.75);
 }
 
 .donation-bubble {
-  right: 12px;
-  bottom: 12px;
-  min-width: 158px;
-  padding: 13px 12px;
-  border-radius: 10px;
+  @apply right-3 bottom-3 min-w-[158px] rounded-[10px] px-3 py-[13px];
 }
 
 .donation-bubble div,
 .status-bar,
 .status-bar strong {
-  display: flex;
-  align-items: center;
+  @apply flex items-center;
 }
 
 .donation-bubble div {
-  justify-content: space-between;
-  gap: 18px;
+  @apply justify-between gap-[18px];
 }
 
 .donation-bubble strong {
-  color: #0a6e78;
-  font-size: 13px;
+  @apply text-[13px] text-[#0a6e78];
 }
 
 .donation-bubble b {
-  color: #20ddf2;
-  font-size: 13px;
+  @apply text-[13px] text-[#20ddf2];
 }
 
 .donation-bubble p {
-  margin: 10px 0 0;
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 800;
+  @apply mt-2.5 mr-0 mb-0 ml-0 text-xs font-extrabold text-white;
 }
 
 .status-bar {
-  height: 42px;
-  justify-content: space-between;
-  margin-top: 15px;
-  padding: 0 13px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  background: rgba(18, 20, 21, 0.74);
-  font-size: 12px;
+  @apply mt-[15px] h-[42px] justify-between rounded-[10px] border border-white/10 bg-[rgba(18,20,21,0.74)] px-[13px] py-0 text-xs;
 }
 
 .status-bar strong {
-  gap: 7px;
-  color: #dcdcdc;
-  font-weight: 700;
+  @apply gap-[7px] font-bold text-[#dcdcdc];
 }
 
 button:focus-visible,
@@ -575,8 +424,8 @@ a:focus-visible {
 @media (max-width: 560px) {
   .register-shell {
     width: calc(100% - 24px);
-    height: auto;
     min-height: 100dvh;
+    padding: 24px 0;
   }
 
   .signup-card {

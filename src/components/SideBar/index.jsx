@@ -20,7 +20,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { logout } from '@/lib/api'
+import { logout } from '@/lib/keycloak'
+import { navigate } from '@/lib/navigation'
 import './style.css'
 
 const navigationItems = [
@@ -48,14 +49,13 @@ function getInitials(name) {
 
 function SideBar({ user }) {
   const [collapsed, setCollapsed] = useState(false)
-  const userName = user?.userName || user?.username || user?.name || 'Usuario'
+  const userName = user?.name || 'Usuario'
   const userEmail = user?.email || ''
-  const userAvatar = user?.avatar || user?.avatarUrl || user?.avatar_url || ''
+  const userAvatar = user?.avatarUrl
   const userInitials = getInitials(userName)
 
   async function handleLogout() {
     await logout()
-    window.location.assign('/login')
   }
 
   return (
@@ -145,7 +145,7 @@ function SideBar({ user }) {
 
             <DropdownMenuItem
               className="sidebar-user-menu-item"
-              onSelect={() => window.location.assign('/settings')}
+              onSelect={() => navigate('/settings')}
             >
               <Settings className="settings-icon" />
               <span>Configurações</span>

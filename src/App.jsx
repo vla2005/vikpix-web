@@ -1,23 +1,72 @@
+import { useEffect, useState } from 'react'
 import RegisterPage from './pages/register'
 import DashboardPage from './pages/dashboard'
 import LoginPage from './pages/login'
 import SettingsPage from './pages/settings'
+import CallbackPage from './pages/callback'
 
 function App() {
-  if (window.location.pathname === '/login') {
+  const [path, setPath] = useState(window.location.pathname)
+
+  useEffect(() => {
+    function handleRouteChange() {
+      setPath(window.location.pathname)
+    }
+
+    function handleLinkClick(event) {
+      const link = event.target.closest('a')
+
+      if (
+        !link ||
+        event.defaultPrevented ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey ||
+        link.target ||
+        link.hasAttribute('download')
+      ) {
+        return
+      }
+
+      const url = new URL(link.href)
+
+      if (url.origin !== window.location.origin || url.pathname === window.location.pathname) {
+        return
+      }
+
+      event.preventDefault()
+      window.history.pushState(null, '', url.pathname)
+      handleRouteChange()
+    }
+
+    window.addEventListener('popstate', handleRouteChange)
+    document.addEventListener('click', handleLinkClick)
+
+    return () => {
+      window.removeEventListener('popstate', handleRouteChange)
+      document.removeEventListener('click', handleLinkClick)
+    }
+  }, [])
+
+  if (path === '/login') {
     return <LoginPage />
   }
 
-  if (window.location.pathname === '/register') {
+  if (path === '/register') {
     return <RegisterPage />
   }
 
-  if (window.location.pathname === '/dashboard') {
+  if (path === '/dashboard') {
     return <DashboardPage />
   }
 
-  if (window.location.pathname === '/settings') {
+  if (path === '/settings') {
     return <SettingsPage />
+  }
+
+  if (path === '/callback') {
+    return <CallbackPage />
   }
 
   return (

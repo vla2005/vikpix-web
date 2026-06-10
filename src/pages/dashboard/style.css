@@ -1,42 +1,30 @@
+@reference "../../index.css";
+
 .control-page {
-  min-height: calc(100dvh - 16px);
-  border-radius: 10px;
-  background: #0f1010;
+  @apply min-h-[calc(100dvh-16px)] rounded-[10px] bg-[#0f1010];
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
 }
 
 .control-inner {
+  @apply mx-auto py-6;
   width: min(976px, calc(100% - 48px));
-  margin: 0 auto;
-  padding: 24px 0;
 }
 
 .control-inner h1 {
-  margin: 0 0 26px;
-  color: #f1f3f4;
-  font-size: 26px;
-  line-height: 1.1;
-  font-weight: 800;
+  @apply mt-0 mb-[26px] text-[26px] leading-[1.1] font-extrabold text-[#f1f3f4];
   letter-spacing: -0.03em;
 }
 
 .control-tabs {
-  display: flex;
-  gap: 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  @apply flex gap-6 border-b border-white/10;
 }
 
 .control-tabs a {
-  position: relative;
-  padding: 10px 0;
-  color: #8c9298;
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
+  @apply relative py-2.5 text-sm font-medium text-[#8c9298] no-underline;
 }
 
 .control-tabs a.is-active {
-  color: #ffffff;
+  @apply text-white;
 }
 
 .control-tabs a.is-active::after {
@@ -50,104 +38,66 @@
 }
 
 .control-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  margin-top: 32px;
-  padding: 17px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 11px;
-  background: #101111;
+  @apply mt-8 flex items-center justify-between gap-[18px] rounded-[11px] border border-white/15 bg-[#101111] p-[17px];
 }
 
 .toolbar-status,
 .toolbar-actions,
 .dashboard-button {
-  display: flex;
-  align-items: center;
+  @apply flex items-center;
 }
 
 .toolbar-status {
-  gap: 12px;
+  @apply gap-3;
 }
 
 .toolbar-status > span {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: #7a7f84;
+  @apply size-2.5 rounded-full bg-[#7a7f84];
 }
 
 .toolbar-status strong {
-  color: #f2f4f5;
-  font-size: 14px;
-  font-weight: 800;
+  @apply text-sm font-extrabold text-[#f2f4f5];
 }
 
 .toolbar-status small {
-  padding: 4px 8px;
-  border-radius: 6px;
-  background: #171818;
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 800;
+  @apply rounded-md bg-[#171818] px-2 py-1 text-[11px] font-extrabold text-white;
 }
 
 .toolbar-actions {
-  gap: 9px;
+  @apply gap-[9px];
 }
 
 .dashboard-button {
-  height: 36px;
-  gap: 7px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
-  background: #111212;
-  color: #f7f7f7;
-  padding: 0 12px;
-  font-size: 14px;
-  font-weight: 700;
+  @apply h-9 gap-[7px] rounded-full border border-white/10 bg-[#111212] px-3 py-0 text-sm font-bold text-[#f7f7f7];
 }
 
 .dashboard-button svg {
-  width: 15px;
-  height: 15px;
+  @apply size-[15px];
 }
 
 .activate-button {
-  border-color: transparent;
-  background: #26bfd2;
-  color: #071113;
+  @apply border-transparent bg-[#26bfd2] text-[#071113];
 }
 
 .donations-empty {
-  display: grid;
-  min-height: 126px;
-  place-items: center;
-  margin-top: 24px;
-  border: 1px dashed rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
-  color: #676d73;
+  @apply mt-6 grid min-h-[126px] place-items-center rounded-[10px] border border-dashed border-white/15 text-[#676d73];
 }
 
 .donations-empty svg {
-  display: none;
+  @apply hidden;
 }
 
 .donations-empty p {
-  margin: 0;
-  font-size: 16px;
+  @apply m-0 text-base;
 }
 
 @media (max-width: 1040px) {
   .control-toolbar {
-    align-items: stretch;
-    flex-direction: column;
+    @apply flex-col items-stretch;
   }
 
   .toolbar-actions {
-    flex-wrap: wrap;
+    @apply flex-wrap;
   }
 }
 
@@ -157,7 +107,6 @@
   }
 
   .control-tabs {
-    gap: 16px;
-    overflow-x: auto;
+    @apply gap-4 overflow-x-auto;
   }
 }
