@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import RegisterPage from './pages/register'
 import DashboardPage from './pages/dashboard'
 import LoginPage from './pages/login'
+import ForgotPasswordPage from './pages/forgot-password'
+import ResetPasswordPage from './pages/reset-password'
 import SettingsPage from './pages/settings'
 import CallbackPage from './pages/callback'
 
@@ -51,6 +53,14 @@ function App() {
 
   if (path === '/login') {
     return <LoginPage />
+  }
+
+  if(path === '/forgot-password') {
+    return <ForgotPasswordPage />
+  }
+
+  if(path === '/reset-password') {
+    return <ResetPasswordPage />
   }
 
   if (path === '/register') {

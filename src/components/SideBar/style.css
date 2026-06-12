@@ -72,32 +72,11 @@
 }
 
 .sidebar-logo {
-  @apply relative grid size-8 place-items-center rounded-[9px] bg-[#22b9c9];
+  @apply relative grid size-8 place-items-center overflow-hidden rounded-[9px] bg-[#22b9c9];
 }
 
-.sidebar-logo::before {
-  content: '';
-  width: 16px;
-  height: 16px;
-  border-radius: 5px;
-  background: #020808;
-  transform: rotate(45deg);
-}
-
-.sidebar-logo span {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  border-radius: 999px;
-  background: #22b9c9;
-}
-
-.sidebar-logo span:first-child {
-  transform: translate(-4px, -1px);
-}
-
-.sidebar-logo span:last-child {
-  transform: translate(4px, -1px);
+.sidebar-logo img {
+  @apply block size-[26px] object-contain;
 }
 
 .sidebar-open-icon {
@@ -105,8 +84,7 @@
   transition: opacity 140ms ease;
 }
 
-.sidebar.is-collapsed .sidebar-logo-button:hover .sidebar-logo::before,
-.sidebar.is-collapsed .sidebar-logo-button:hover .sidebar-logo span {
+.sidebar.is-collapsed .sidebar-logo-button:hover .sidebar-logo img {
   opacity: 0;
 }
 

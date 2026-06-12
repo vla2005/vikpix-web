@@ -1,0 +1,35 @@
+@reference "../../index.css";
+
+.auth-background-grid-layer,
+.auth-background-shade {
+  @apply pointer-events-none fixed inset-0;
+}
+
+.auth-background-grid-layer {
+  @apply z-0 overflow-hidden text-gray-400/30;
+}
+
+.auth-background-grid {
+  position: absolute;
+  inset-inline: 0;
+  top: -20%;
+  width: 100%;
+  height: 170%;
+  fill: currentColor;
+  stroke: currentColor;
+  transform: skewY(8deg);
+  transform-origin: center;
+  mask-image: radial-gradient(900px circle at center, #fff, transparent);
+  -webkit-mask-image: radial-gradient(900px circle at center, #fff, transparent);
+}
+
+.auth-background-grid-squares {
+  overflow: visible;
+}
+
+.auth-background-shade {
+  z-index: 1;
+  background:
+    radial-gradient(circle at 52% 46%, rgba(255, 255, 255, 0.035), transparent 30%),
+    linear-gradient(90deg, rgba(11, 13, 14, 0.34), rgba(11, 13, 14, 0.16) 45%, rgba(11, 13, 14, 0.3));
+}

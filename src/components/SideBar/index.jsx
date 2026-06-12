@@ -71,8 +71,7 @@ function SideBar({ user }) {
           aria-label={collapsed ? 'Expandir menu' : 'Pagina inicial'}
         >
           <span className="sidebar-logo" aria-hidden="true">
-            <span></span>
-            <span></span>
+            <img src="/logo-sem-fundo.png" alt="" />
           </span>
           <PanelLeftOpen className="sidebar-open-icon" aria-hidden="true" />
         </button>
