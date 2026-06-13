@@ -1,4 +1,4 @@
-import { getKeycloakToken, redirectToLogin } from '@/lib/keycloak'
+import { redirectToLogin } from '@/lib/keycloak'
 
 const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
 
@@ -20,24 +20,36 @@ export async function parseApiResponse(response) {
   return JSON.parse(responseText)
 }
 
-export async function apiFetch(endpoint, options = {}) {
-  const headers = new Headers(options.headers)
-  const token = await getKeycloakToken()
-
-  if (!token) {
-    redirectToLogin()
-    throw new Error('Usuario nao autenticado.')
-  }
-
-  headers.set('Authorization', `Bearer ${token}`)
-
-  const response = await fetch(getApiUrl(endpoint), {
-    ...options,
-    headers,
+async function refreshSession() {
+  const response = await fetch(getApiUrl('/auth/refresh'), {
+    method: 'POST',
+    credentials: 'include',
   })
 
+  return response.ok
+}
+
+async function request(endpoint, options = {}) {
+  const headers = new Headers(options.headers)
+
+  return fetch(getApiUrl(endpoint), {
+    ...options,
+    headers,
+    credentials: options.credentials || 'include',
+  })
+}
+
+export async function apiFetch(endpoint, options = {}) {
+  let response = await request(endpoint, options)
+
   if (response.status === 401) {
-    redirectToLogin()
+    const refreshed = await refreshSession()
+
+    if (refreshed) {
+      response = await request(endpoint, options)
+    } else {
+      redirectToLogin()
+    }
   }
 
   return response

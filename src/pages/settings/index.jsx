@@ -27,7 +27,7 @@ function SettingsPage() {
         const phone = getUserValue(user, ['phone', 'phoneNumber', 'cellphone', 'cellPhone'])
 
         return (
-          <section className="min-h-[calc(100dvh-16px)] rounded-[10px] bg-[#0f1010] text-[#f4f4f4] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.02)]">
+          <section className="min-h-dvh bg-[var(--dashboard-surface)] text-[var(--dashboard-text)]">
             <div className="ml-7 w-[min(860px,calc(100%-56px))] py-6 max-[860px]:mx-auto max-[860px]:w-[min(620px,calc(100%-28px))]">
               <header className="mb-8">
                 <h1 className="mt-0 mb-1.5 text-[24px] leading-[1.1] font-extrabold tracking-[-0.025em] text-[#f1f3f4]">

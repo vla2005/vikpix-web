@@ -7,6 +7,17 @@ import './style.css'
 function MainLayout({ children }) {
   const [ready, setReady] = useState(false)
   const [user, setUser] = useState(null)
+  const [theme, setTheme] = useState(() => {
+    if (typeof window === 'undefined') {
+      return 'dark'
+    }
+
+    return window.localStorage.getItem('vikpix-dashboard-theme') || 'dark'
+  })
+
+  useEffect(() => {
+    window.localStorage.setItem('vikpix-dashboard-theme', theme)
+  }, [theme])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -17,6 +28,7 @@ function MainLayout({ children }) {
           headers: {
             Accept: 'application/json',
           },
+          credentials: 'include',
           signal: controller.signal,
         })
 
@@ -51,8 +63,12 @@ function MainLayout({ children }) {
   }
 
   return (
-    <div className="main-layout">
-      <SideBar user={user} />
+    <div className={`main-layout ${theme === 'light' ? 'is-light' : 'is-dark'}`}>
+      <SideBar
+        theme={theme}
+        user={user}
+        onToggleTheme={() => setTheme((currentTheme) => currentTheme === 'dark' ? 'light' : 'dark')}
+      />
       <main className="main-layout-content">
         {typeof children === 'function' ? children({ user }) : children}
       </main>

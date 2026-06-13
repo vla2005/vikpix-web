@@ -4,10 +4,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  loginWithCredentials,
-  loginWithProvider,
-} from '@/lib/keycloak'
+import { loginWithProvider } from '@/lib/keycloak'
 import { navigate } from '@/lib/navigation'
 import AuthBackground from '@/components/AuthBackground'
 import AuthToast from '@/components/AuthToast'
@@ -41,16 +38,38 @@ function LoginPage() {
     setLoading(true)
 
     const formData = new FormData(form)
-    const username = formData.get('email')
+    const email = formData.get('email')
     const password = formData.get('password')
     const rememberMe = formData.get('rememberMe') === 'on'
 
     try {
-      await loginWithCredentials({
-        username,
-        password,
-        rememberMe,
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          email,
+          password,
+          rememberMe,
+        }),
       })
+
+      const responseText = await response.text()
+      let data = null
+
+      if (responseText) {
+        try {
+          data = JSON.parse(responseText)
+        } catch {
+          data = { message: responseText }
+        }
+      }
+
+      if (!response.ok) {
+      throw new Error(data?.message || 'E-mail ou senha inválidos.')
+    }
 
       form.reset()
       setSuccess('Login realizado com sucesso.')
@@ -58,7 +77,7 @@ function LoginPage() {
         navigate('/dashboard')
       }, 600)
     } catch (error) {
-      setError(error.message || 'Erro ao fazer login.')
+      setError(error.message || 'Não foi possível entrar no sistema.');
     } finally {
       setLoading(false)
     }

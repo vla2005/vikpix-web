@@ -17,6 +17,7 @@ const authorizationUrl = `${keycloakUrl}/realms/${keycloakRealm}/protocol/openid
 const tokenUrl = `${keycloakUrl}/realms/${keycloakRealm}/protocol/openid-connect/token`
 const logoutUrl = `${keycloakUrl}/realms/${keycloakRealm}/protocol/openid-connect/logout`
 const sessionKey = 'vikpix_keycloak_session'
+const keycloakLoginScope = 'openid profile email offline_access'
 
 let accessToken = null
 let refreshToken = null
@@ -134,7 +135,7 @@ export async function loginWithCredentials({ username, password, rememberMe = fa
     client_id: keycloakClientId,
     username,
     password,
-    scope: 'openid profile email',
+    scope: keycloakLoginScope,
   })
 
   return requestToken(body, { rememberMe })
@@ -146,19 +147,20 @@ export async function loginWithIdentityProvider(identityProvider) {
   return keycloak.login({
     idpHint: identityProvider,
     redirectUri: `${window.location.origin}/dashboard`,
+    scope: keycloakLoginScope,
   })
 }
 
 export function loginWithProvider(providerAlias) {
-  const twitchLoginUrl =
+  const providerLoginUrl =
     `${authorizationUrl}` +
     `?client_id=${encodeURIComponent(keycloakClientId)}` +
     `&redirect_uri=${encodeURIComponent(callbackRedirectUri)}` +
     `&response_type=code` +
-    `&scope=${encodeURIComponent('openid profile email')}` +
+    `&scope=${encodeURIComponent(keycloakLoginScope)}` +
     `&kc_idp_hint=${encodeURIComponent(providerAlias)}`
 
-  window.location.href = twitchLoginUrl
+  window.location.href = providerLoginUrl
 }
 
 export async function handleAuthorizationCallback(callbackLocation = window.location.href) {
@@ -210,23 +212,6 @@ export async function refreshKeycloakToken(minValidity = 30) {
     clearTokenData()
     throw error
   }
-}
-
-export async function getKeycloakToken(minValidity = 30) {
-  restoreSession()
-
-  if (accessToken || refreshToken) {
-    return refreshKeycloakToken(minValidity)
-  }
-
-  const authenticatedByRedirect = await initKeycloak()
-
-  if (authenticatedByRedirect) {
-    await keycloak.updateToken(minValidity)
-    return keycloak.token
-  }
-
-  return null
 }
 
 export async function logout() {

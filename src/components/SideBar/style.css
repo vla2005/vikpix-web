@@ -1,7 +1,8 @@
 @reference "../../index.css";
 
 .sidebar {
-  @apply flex min-h-dvh flex-col bg-[#191a1a] text-[#f4f4f4];
+  @apply flex min-h-dvh flex-col text-[var(--dashboard-text)];
+  background: var(--dashboard-sidebar);
   width: 254px;
   flex: 0 0 254px;
   padding: 24px 14px 18px;
@@ -26,49 +27,6 @@
 
 .sidebar-logo-button {
   @apply relative grid size-8 cursor-pointer place-items-center border-0 bg-transparent p-0 text-[#111516];
-}
-
-.sidebar.is-collapsed .sidebar-logo-button::before {
-  content: 'Expandir menu';
-  position: absolute;
-  left: calc(100% + 12px);
-  top: 50%;
-  z-index: 5;
-  width: max-content;
-  padding: 8px 12px;
-  border-radius: 7px;
-  background: #22b9c9;
-  color: #071113;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-50%) translateX(-4px);
-  transition: opacity 140ms ease, transform 140ms ease;
-}
-
-.sidebar.is-collapsed .sidebar-logo-button::after {
-  content: '';
-  position: absolute;
-  left: calc(100% + 5px);
-  top: 50%;
-  z-index: 5;
-  width: 0;
-  height: 0;
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
-  border-right: 7px solid #22b9c9;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-50%) translateX(-4px);
-  transition: opacity 140ms ease, transform 140ms ease;
-}
-
-.sidebar.is-collapsed .sidebar-logo-button:hover::before,
-.sidebar.is-collapsed .sidebar-logo-button:hover::after {
-  opacity: 1;
-  transform: translateY(-50%) translateX(0);
 }
 
 .sidebar-logo {
@@ -101,8 +59,68 @@
   display: none;
 }
 
+.sidebar-tooltip {
+  display: contents;
+}
+
+.sidebar.is-collapsed .sidebar-tooltip {
+  position: relative;
+  display: grid;
+  place-items: center;
+  justify-self: center;
+}
+
+.sidebar-tooltip-content {
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  z-index: 20;
+  width: max-content;
+  max-width: 220px;
+  padding: 8px 12px;
+  border-radius: 7px;
+  background: #22b9c9;
+  color: #071113;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transform: translateY(-50%) translateX(-4px);
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+
+.main-layout.is-light .sidebar-tooltip-content {
+  color: #ffffff;
+}
+
+.sidebar-tooltip-content::before {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 7px solid #22b9c9;
+  transform: translateY(-50%);
+}
+
+.sidebar.is-collapsed .sidebar-tooltip:hover .sidebar-tooltip-content,
+.sidebar.is-collapsed .sidebar-tooltip:focus-within .sidebar-tooltip-content {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.sidebar:not(.is-collapsed) .sidebar-tooltip-content {
+  display: none;
+}
+
 .sidebar-collapse {
-  @apply grid size-5 cursor-pointer place-items-center border-0 bg-transparent text-[#d5d6d7];
+  @apply grid size-5 cursor-pointer place-items-center border-0 bg-transparent;
+  color: var(--dashboard-text);
 }
 
 .sidebar-collapse svg {
@@ -118,7 +136,8 @@
 }
 
 .sidebar-nav p {
-  @apply mt-0 mr-0 mb-0.5 ml-0 px-[7px] py-0 text-xs font-bold text-[#d9dcde];
+  @apply mt-0 mr-0 mb-0.5 ml-0 px-[7px] py-0 text-xs font-bold;
+  color: var(--dashboard-text);
 }
 
 .sidebar.is-collapsed .sidebar-nav p {
@@ -126,7 +145,8 @@
 }
 
 .sidebar-link {
-  @apply flex min-h-10 items-center gap-2.5 rounded-[7px] px-[9px] py-0 text-sm font-bold text-white no-underline;
+  @apply flex min-h-10 items-center gap-2.5 rounded-[7px] px-[9px] py-0 text-sm font-bold no-underline;
+  color: var(--dashboard-text);
   transition: background 160ms ease, color 160ms ease;
 }
 
@@ -140,7 +160,7 @@
 
 .sidebar-link:hover,
 .sidebar-link.is-active {
-  background: #262626;
+  background: var(--dashboard-hover);
 }
 
 .sidebar-link svg {
@@ -162,7 +182,8 @@
 
 .theme-button,
 .user-button {
-  @apply flex cursor-pointer items-center border-0 bg-transparent text-white font-[inherit];
+  @apply flex cursor-pointer items-center border-0 bg-transparent font-[inherit];
+  color: var(--dashboard-text);
 }
 
 .theme-button {
@@ -191,7 +212,7 @@
 
 .user-button:hover,
 .user-button[data-state='open'] {
-  background: #262626;
+  background: var(--dashboard-hover);
 }
 
 .sidebar.is-collapsed .user-button {
@@ -202,7 +223,9 @@
 }
 
 .user-avatar {
-  @apply grid size-8 shrink-0 place-items-center overflow-hidden rounded-full bg-[#3b3c3f] text-[15px] font-bold text-white;
+  @apply grid size-8 shrink-0 place-items-center overflow-hidden rounded-full text-[15px] font-bold;
+  background: var(--dashboard-avatar);
+  color: var(--dashboard-text);
 }
 
 .sidebar.is-collapsed .user-avatar {
@@ -229,9 +252,25 @@
 }
 
 .sidebar-user-menu {
-  @apply min-w-56 overflow-hidden rounded-[10px] border border-[#2f3030] bg-[#191a1a] p-0 text-white;
+  @apply min-w-56 overflow-hidden rounded-[10px] border p-0;
+  border-color: var(--dashboard-border-strong, #2f3030);
+  background: var(--dashboard-sidebar, #191a1a);
+  color: var(--dashboard-text, #ffffff);
   width: 224px;
-  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.36);
+  box-shadow: 0 14px 32px var(--dashboard-shadow, rgba(0, 0, 0, 0.36));
+}
+
+.sidebar-user-menu.is-light {
+  --dashboard-sidebar: #ffffff;
+  --dashboard-panel: #ffffff;
+  --dashboard-hover: #eef2f4;
+  --dashboard-dropdown-hover: #eef2f4;
+  --dashboard-border: rgba(10, 18, 24, 0.1);
+  --dashboard-border-strong: rgba(10, 18, 24, 0.14);
+  --dashboard-text: #101417;
+  --dashboard-muted: #68727b;
+  --dashboard-avatar: #d9e0e5;
+  --dashboard-shadow: rgba(13, 24, 33, 0.1);
 }
 
 .sidebar-user-menu-header {
@@ -245,8 +284,8 @@
   height: 32px;
   place-items: center;
   border-radius: 999px;
-  background: #3b3c3f;
-  color: #ffffff;
+  background: var(--dashboard-avatar);
+  color: var(--dashboard-text);
   font-size: 14px;
   font-weight: 700;
   line-height: 1;
@@ -269,21 +308,24 @@
 }
 
 .sidebar-user-menu-header div strong {
-  @apply text-sm leading-tight font-extrabold text-white;
+  @apply text-sm leading-tight font-extrabold;
+  color: var(--dashboard-text);
 }
 
 .sidebar-user-menu-header div span {
-  @apply mt-0.5 text-[13px] font-medium text-[#8d9297];
+  @apply mt-0.5 text-[13px] font-medium;
+  color: var(--dashboard-muted);
 }
 
 .sidebar-user-menu-separator {
   height: 1px;
   margin: 0;
-  background: #2f3030;
+  background: var(--dashboard-border-strong);
 }
 
 .sidebar-user-menu-item {
-  @apply flex h-9 items-center gap-3 rounded-[5px] px-3 py-0 text-sm font-bold text-white outline-none;
+  @apply flex h-9 items-center gap-3 rounded-[5px] px-3 py-0 text-sm font-bold outline-none;
+  color: var(--dashboard-text) !important;
   width: calc(100% - 12px);
   margin: 4px 6px;
   background: transparent !important;
@@ -294,20 +336,20 @@
 .sidebar-user-menu-item:hover,
 .sidebar-user-menu-item:focus,
 .sidebar-user-menu-item[data-highlighted] {
-  background: #2b2b2b !important;
-  color: #ffffff !important;
+  background: var(--dashboard-dropdown-hover) !important;
+  color: var(--dashboard-text) !important;
 }
 
 .sidebar-user-menu-item:hover span,
 .sidebar-user-menu-item:focus span,
 .sidebar-user-menu-item[data-highlighted] span {
-  color: #ffffff !important;
+  color: var(--dashboard-text) !important;
 }
 
 .sidebar-user-menu-item svg {
   width: 16px;
   height: 16px;
-  color: #8d9297 !important;
+  color: var(--dashboard-muted) !important;
   stroke: currentColor !important;
   transition: color 150ms ease, transform 220ms ease;
 }
@@ -315,7 +357,7 @@
 .sidebar-user-menu-item:hover svg,
 .sidebar-user-menu-item:focus svg,
 .sidebar-user-menu-item[data-highlighted] svg {
-  color: #aeb3b8 !important;
+  color: var(--dashboard-muted) !important;
   stroke: currentColor !important;
 }
 
@@ -327,7 +369,7 @@
 .sidebar-user-menu .sidebar-user-menu-item:focus svg *,
 .sidebar-user-menu .sidebar-user-menu-item[data-highlighted] svg,
 .sidebar-user-menu .sidebar-user-menu-item[data-highlighted] svg * {
-  color: #aeb3b8 !important;
+  color: var(--dashboard-muted) !important;
   stroke: currentColor !important;
 }
 

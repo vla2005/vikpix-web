@@ -1,8 +1,8 @@
 @reference "../../index.css";
 
 .control-page {
-  @apply min-h-[calc(100dvh-16px)] rounded-[10px] bg-[#0f1010];
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  @apply min-h-dvh;
+  background: var(--dashboard-surface);
 }
 
 .control-inner {
@@ -11,20 +11,23 @@
 }
 
 .control-inner h1 {
-  @apply mt-0 mb-[26px] text-[26px] leading-[1.1] font-extrabold text-[#f1f3f4];
+  @apply mt-0 mb-[26px] text-[26px] leading-[1.1] font-extrabold;
+  color: var(--dashboard-heading);
   letter-spacing: -0.03em;
 }
 
 .control-tabs {
-  @apply flex gap-6 border-b border-white/10;
+  @apply flex gap-6 border-b;
+  border-color: var(--dashboard-border);
 }
 
 .control-tabs a {
-  @apply relative py-2.5 text-sm font-medium text-[#8c9298] no-underline;
+  @apply relative py-2.5 text-sm font-medium no-underline;
+  color: var(--dashboard-muted);
 }
 
 .control-tabs a.is-active {
-  @apply text-white;
+  color: var(--dashboard-text);
 }
 
 .control-tabs a.is-active::after {
@@ -34,11 +37,13 @@
   right: 0;
   bottom: -1px;
   height: 2px;
-  background: #22bfd2;
+  background: var(--dashboard-accent);
 }
 
 .control-toolbar {
-  @apply mt-8 flex items-center justify-between gap-[18px] rounded-[11px] border border-white/15 bg-[#101111] p-[17px];
+  @apply mt-8 flex items-center justify-between gap-[18px] rounded-[11px] border p-[17px];
+  border-color: var(--dashboard-border-strong);
+  background: var(--dashboard-panel);
 }
 
 .toolbar-status,
@@ -52,15 +57,19 @@
 }
 
 .toolbar-status > span {
-  @apply size-2.5 rounded-full bg-[#7a7f84];
+  @apply size-2.5 rounded-full;
+  background: var(--dashboard-muted-strong);
 }
 
 .toolbar-status strong {
-  @apply text-sm font-extrabold text-[#f2f4f5];
+  @apply text-sm font-extrabold;
+  color: var(--dashboard-text);
 }
 
 .toolbar-status small {
-  @apply rounded-md bg-[#171818] px-2 py-1 text-[11px] font-extrabold text-white;
+  @apply rounded-md px-2 py-1 text-[11px] font-extrabold;
+  background: var(--dashboard-panel-muted);
+  color: var(--dashboard-text);
 }
 
 .toolbar-actions {
@@ -68,7 +77,10 @@
 }
 
 .dashboard-button {
-  @apply h-9 gap-[7px] rounded-full border border-white/10 bg-[#111212] px-3 py-0 text-sm font-bold text-[#f7f7f7];
+  @apply h-9 gap-[7px] rounded-full border px-3 py-0 text-sm font-bold;
+  border-color: var(--dashboard-border);
+  background: var(--dashboard-app-bg);
+  color: var(--dashboard-text);
 }
 
 .dashboard-button svg {
@@ -76,11 +88,15 @@
 }
 
 .activate-button {
-  @apply border-transparent bg-[#26bfd2] text-[#071113];
+  @apply border-transparent;
+  background: var(--dashboard-accent);
+  color: var(--dashboard-accent-text);
 }
 
 .donations-empty {
-  @apply mt-6 grid min-h-[126px] place-items-center rounded-[10px] border border-dashed border-white/15 text-[#676d73];
+  @apply mt-6 grid min-h-[126px] place-items-center rounded-[10px] border border-dashed;
+  border-color: var(--dashboard-border-strong);
+  color: var(--dashboard-muted-strong);
 }
 
 .donations-empty svg {

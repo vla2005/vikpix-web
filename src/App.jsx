@@ -6,6 +6,7 @@ import ForgotPasswordPage from './pages/forgot-password'
 import ResetPasswordPage from './pages/reset-password'
 import SettingsPage from './pages/settings'
 import CallbackPage from './pages/callback'
+import WidgetsPage from './pages/widgets'
 
 function App() {
   const [path, setPath] = useState(window.location.pathname)
@@ -73,6 +74,10 @@ function App() {
 
   if (path === '/settings') {
     return <SettingsPage />
+  }
+
+  if (path === '/widgets') {
+    return <WidgetsPage />
   }
 
   if (path === '/callback') {
