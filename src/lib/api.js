@@ -1,4 +1,4 @@
-import { redirectToLogin } from '@/lib/keycloak'
+import { navigate } from '@/lib/navigation'
 
 const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
 
@@ -27,6 +27,12 @@ async function refreshSession() {
   })
 
   return response.ok
+}
+
+export function redirectToLogin() {
+  if (window.location.pathname !== '/login') {
+    navigate('/login')
+  }
 }
 
 async function request(endpoint, options = {}) {

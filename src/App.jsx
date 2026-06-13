@@ -5,7 +5,6 @@ import LoginPage from './pages/login'
 import ForgotPasswordPage from './pages/forgot-password'
 import ResetPasswordPage from './pages/reset-password'
 import SettingsPage from './pages/settings'
-import CallbackPage from './pages/callback'
 import WidgetsPage from './pages/widgets'
 
 function App() {
@@ -78,10 +77,6 @@ function App() {
 
   if (path === '/widgets') {
     return <WidgetsPage />
-  }
-
-  if (path === '/callback') {
-    return <CallbackPage />
   }
 
   return (

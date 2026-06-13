@@ -26,6 +26,8 @@ import { navigate } from '@/lib/navigation'
 import SideBarTooltip from './SideBarTooltip'
 import './style.css'
 
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
+
 const navigationItems = [
   { label: 'Central de Controle', icon: Gauge, active: true },
   { label: 'Saldo e Transações', icon: WalletCards },
@@ -47,6 +49,22 @@ function getInitials(name) {
     .map((part) => part[0])
     .join('')
     .toUpperCase()
+}
+
+async function requestLogout() {
+  return fetch(`${apiUrl}/auth/logout`, {
+    method: 'POST',
+    credentials: 'include',
+  })
+}
+
+async function refreshSession() {
+  const response = await fetch(`${apiUrl}/auth/refresh`, {
+    method: 'POST',
+    credentials: 'include',
+  })
+
+  return response.ok
 }
 
 function SideBar({ user, theme = 'dark', onToggleTheme }) {
@@ -75,10 +93,15 @@ function SideBar({ user, theme = 'dark', onToggleTheme }) {
 
   async function handleLogout() {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
-        method: 'POST',
-        credentials: 'include',
-      })
+      let response = await requestLogout()
+
+      if (response.status === 401) {
+        const refreshed = await refreshSession()
+
+        if (refreshed) {
+          response = await requestLogout()
+        }
+      }
 
       if (!response.ok) {
         const responseText = await response.text()

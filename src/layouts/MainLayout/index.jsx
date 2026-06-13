@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import SideBar from '@/components/SideBar'
-import { apiFetch, parseApiResponse } from '@/lib/api'
-import { redirectToLogin } from '@/lib/keycloak'
+import { apiFetch, parseApiResponse, redirectToLogin } from '@/lib/api'
 import './style.css'
 
 function MainLayout({ children }) {

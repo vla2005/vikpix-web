@@ -4,12 +4,20 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { loginWithProvider } from '@/lib/keycloak'
 import { navigate } from '@/lib/navigation'
 import AuthBackground from '@/components/AuthBackground'
 import AuthToast from '@/components/AuthToast'
 
 const backgroundVideo = 'https://reactpix.com/images/reactpix.webm'
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
+
+function loginWithGoogle(rememberMe) {
+  const params = new URLSearchParams({
+    rememberMe: String(Boolean(rememberMe)),
+  })
+
+  window.location.href = `${apiUrl}/auth/oauth/google?${params}`
+}
 
 function LoginPage() {
 
@@ -83,11 +91,13 @@ function LoginPage() {
     }
   }
 
-  async function handleGoogleLogin() {
+  async function handleGoogleLogin(event) {
     setError('')
 
     try {
-      loginWithProvider('google')
+      const rememberMe = event.currentTarget.form?.elements.rememberMe?.checked || false
+
+      loginWithGoogle(rememberMe)
     } catch (error) {
       setError(error.message || 'Erro ao iniciar login com Google.')
     }
