@@ -9,7 +9,7 @@ import AuthBackground from '@/components/AuthBackground'
 import AuthToast from '@/components/AuthToast'
 
 const backgroundVideo = 'https://reactpix.com/images/reactpix.webm'
-const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
+const apiUrl = import.meta.env.VITE_AUTH_API_URL || 'http://localhost:8080/api'
 
 function loginWithGoogle() {
   const params = new URLSearchParams({
@@ -75,11 +75,8 @@ function RegisterPage() {
         body: JSON.stringify(payload)
       })
 
-      const responseText = await response.text()
-      const data = responseText ? JSON.parse(responseText) : null
-
       if(!response.ok) {
-        throw new Error(data?.message || 'Erro ao criar conta')
+        throw new Error('register-failed')
       }
 
       form.reset()
@@ -88,8 +85,8 @@ function RegisterPage() {
         navigate('/login')
       }, 900)
 
-      } catch (error) {
-        setError(error.message)
+      } catch {
+        setError('Não foi possível criar a conta.')
       } finally {
         setLoading(false)
     }

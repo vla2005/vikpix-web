@@ -1,6 +1,5 @@
-import { navigate } from '@/lib/navigation'
-
-const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
+const apiUrl = import.meta.env.VITE_AUTH_API_URL || 'http://localhost:8080/api'
+let refreshPromise = null
 
 function getApiUrl(endpoint) {
   if (endpoint.startsWith('http')) {
@@ -21,17 +20,26 @@ export async function parseApiResponse(response) {
 }
 
 async function refreshSession() {
-  const response = await fetch(getApiUrl('/auth/refresh'), {
-    method: 'POST',
-    credentials: 'include',
-  })
+  if (!refreshPromise) {
+    refreshPromise = fetch(getApiUrl('/auth/refresh'), {
+      method: 'POST',
+      credentials: 'include',
+      cache: 'no-store',
+    })
+      .then((response) => response.ok)
+      .catch(() => false)
+      .finally(() => {
+        refreshPromise = null
+      })
+  }
 
-  return response.ok
+  return refreshPromise
 }
 
 export function redirectToLogin() {
   if (window.location.pathname !== '/login') {
-    navigate('/login')
+    window.history.replaceState(null, '', '/login')
+    window.dispatchEvent(new PopStateEvent('popstate'))
   }
 }
 
@@ -46,13 +54,21 @@ async function request(endpoint, options = {}) {
 }
 
 export async function apiFetch(endpoint, options = {}) {
-  let response = await request(endpoint, options)
+  const requestOptions = {
+    ...options,
+    headers: new Headers(options.headers),
+  }
+
+  let response = await request(endpoint, requestOptions)
 
   if (response.status === 401) {
     const refreshed = await refreshSession()
 
     if (refreshed) {
-      response = await request(endpoint, options)
+      response = await request(endpoint, {
+        ...requestOptions,
+        headers: new Headers(requestOptions.headers),
+      })
     } else {
       redirectToLogin()
     }

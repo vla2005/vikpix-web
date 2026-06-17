@@ -1,6 +1,7 @@
 import '../register/style.css'
 import './style.css'
 import { useEffect, useState } from 'react'
+import { ShieldCheck, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -9,7 +10,7 @@ import AuthBackground from '@/components/AuthBackground'
 import AuthToast from '@/components/AuthToast'
 
 const backgroundVideo = 'https://reactpix.com/images/reactpix.webm'
-const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
+const apiUrl = import.meta.env.VITE_AUTH_API_URL || 'http://localhost:8080/api'
 
 function loginWithGoogle(rememberMe) {
   const params = new URLSearchParams({
@@ -19,9 +20,81 @@ function loginWithGoogle(rememberMe) {
   window.location.href = `${apiUrl}/auth/oauth/google?${params}`
 }
 
-function LoginPage() {
+async function parseResponse(response) {
+  const responseText = await response.text()
 
+  if (!responseText) {
+    return null
+  }
+
+  try {
+    return JSON.parse(responseText)
+  } catch {
+    return { message: responseText }
+  }
+}
+
+function TwoFactorLoginModal({
+  open,
+  code,
+  loading,
+  onClose,
+  onCodeChange,
+  onConfirm,
+}) {
+  if (!open) {
+    return null
+  }
+
+  return (
+    <div className="fixed inset-0 z-40 grid place-items-center bg-black/82 px-4 backdrop-blur-[2px]">
+      <section className="relative w-[min(448px,calc(100vw-32px))] rounded-lg border border-white/12 bg-[#121212] px-8 py-6 text-center text-white shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
+        <button
+          className="absolute right-4 top-4 grid size-7 place-items-center rounded-full border-0 bg-transparent text-[#9aa0a6] transition hover:text-white"
+          type="button"
+          onClick={onClose}
+          aria-label="Fechar"
+        >
+          <X className="size-4" />
+        </button>
+
+        <div className="mx-auto grid size-[54px] place-items-center rounded-full border border-white/10 bg-[#202020] shadow-[inset_0_0_0_6px_rgba(255,255,255,0.035)]">
+          <ShieldCheck className="size-6 text-[#d7dbde]" strokeWidth={1.7} />
+        </div>
+
+        <h2 className="mb-2 mt-8 text-[20px] font-extrabold tracking-[-0.025em] text-[#e9ecef]">
+          Verifique sua autenticação
+        </h2>
+        <p className="mx-auto mb-6 max-w-[360px] text-sm leading-5 text-[#8d9399]">
+          Informe o código do aplicativo autenticador ou um código de recuperação.
+        </p>
+
+        <Input
+          className="mb-5 h-11 rounded-lg border-white/10 bg-[#101010] px-4 text-center font-mono text-sm tracking-[0.12em] text-white shadow-none focus:border-[#25c2d4] focus:shadow-[0_0_0_2px_rgba(37,194,212,0.35)]"
+          value={code}
+          onChange={(event) => onCodeChange(event.target.value.trim())}
+          placeholder="123456 ou AAAA-BBBB-CCCC"
+          autoFocus
+        />
+
+        <Button
+          className="h-11 w-full rounded-full border-0 bg-[#28b9ca] px-4 text-sm font-medium text-[#071315] shadow-none hover:bg-[#28b9ca] hover:brightness-105 disabled:opacity-60"
+          type="button"
+          disabled={loading || !code}
+          onClick={onConfirm}
+        >
+          {loading ? 'Verificando...' : 'Confirmar'}
+        </Button>
+      </section>
+    </div>
+  )
+}
+
+function LoginPage() {
   const [loading, setLoading] = useState(false)
+  const [twoFactorLoading, setTwoFactorLoading] = useState(false)
+  const [twoFactorChallengeToken, setTwoFactorChallengeToken] = useState('')
+  const [twoFactorCode, setTwoFactorCode] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
@@ -40,21 +113,23 @@ function LoginPage() {
 
   async function handleSubmit(event) {
     event.preventDefault()
-    const form = event.currentTarget
-    setError('')
-    setSuccess('')
-    setLoading(true)
 
+    const form = event.currentTarget
     const formData = new FormData(form)
     const email = formData.get('email')
     const password = formData.get('password')
     const rememberMe = formData.get('rememberMe') === 'on'
 
+    setError('')
+    setSuccess('')
+    setLoading(true)
+
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+      const response = await fetch(`${apiUrl}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         credentials: 'include',
         body: JSON.stringify({
@@ -64,30 +139,65 @@ function LoginPage() {
         }),
       })
 
-      const responseText = await response.text()
-      let data = null
-
-      if (responseText) {
-        try {
-          data = JSON.parse(responseText)
-        } catch {
-          data = { message: responseText }
-        }
-      }
+      const data = await parseResponse(response)
 
       if (!response.ok) {
-      throw new Error(data?.message || 'E-mail ou senha inválidos.')
-    }
+        throw new Error('E-mail ou senha inválidos.')
+      }
+
+      if (data?.status === 'TWO_FACTOR_REQUIRED' && data?.challengeToken) {
+        setTwoFactorChallengeToken(data.challengeToken)
+        setTwoFactorCode('')
+        return
+      }
 
       form.reset()
       setSuccess('Login realizado com sucesso.')
       window.setTimeout(() => {
         navigate('/dashboard')
       }, 600)
-    } catch (error) {
-      setError(error.message || 'Não foi possível entrar no sistema.');
+    } catch {
+      setError('E-mail ou senha inválidos.')
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function handleVerifyTwoFactor() {
+    setError('')
+    setSuccess('')
+    setTwoFactorLoading(true)
+
+    try {
+      const response = await fetch(`${apiUrl}/auth/2fa/verify-login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          challengeToken: twoFactorChallengeToken,
+          code: twoFactorCode,
+        }),
+      })
+
+      const data = await parseResponse(response)
+
+      if (!response.ok || !data?.authenticated) {
+        throw new Error('two-factor-failed')
+      }
+
+      setTwoFactorChallengeToken('')
+      setTwoFactorCode('')
+      setSuccess('Login realizado com sucesso.')
+      window.setTimeout(() => {
+        navigate('/dashboard')
+      }, 600)
+    } catch {
+      setError('Não foi possível verificar o código.')
+    } finally {
+      setTwoFactorLoading(false)
     }
   }
 
@@ -98,8 +208,8 @@ function LoginPage() {
       const rememberMe = event.currentTarget.form?.elements.rememberMe?.checked || false
 
       loginWithGoogle(rememberMe)
-    } catch (error) {
-      setError(error.message || 'Erro ao iniciar login com Google.')
+    } catch {
+      setError('Erro ao iniciar login com Google.')
     }
   }
 
@@ -111,6 +221,18 @@ function LoginPage() {
         type={error ? 'error' : 'success'}
         title={error ? 'Não foi possível entrar' : 'Login realizado'}
         message={error || success}
+      />
+
+      <TwoFactorLoginModal
+        open={Boolean(twoFactorChallengeToken)}
+        code={twoFactorCode}
+        loading={twoFactorLoading}
+        onClose={() => {
+          setTwoFactorChallengeToken('')
+          setTwoFactorCode('')
+        }}
+        onCodeChange={setTwoFactorCode}
+        onConfirm={handleVerifyTwoFactor}
       />
 
       <section className="register-shell">
@@ -184,7 +306,7 @@ function LoginPage() {
           </form>
 
           <aside className="showcase" aria-label="Demonstração do ReactPix">
-            <p className="eyebrow">DOAÇÕES AO VIVO</p>
+            <p className="eyebrow">DOACOES AO VIVO</p>
             <h2>Alertas e interações com visual de transmissão</h2>
             <p className="showcase-copy">
               Configure em minutos e deixe sua live com cara profissional desde o
@@ -204,7 +326,7 @@ function LoginPage() {
                   <strong>@viewer123</strong>
                   <b>R$ 20,00</b>
                 </div>
-                <p>Salve! Conteúdo bom demais.</p>
+                <p>Salve! Conteudo bom demais.</p>
               </div>
             </div>
 

@@ -37,7 +37,7 @@ function MainLayout({ children }) {
             return
           }
 
-          throw new Error('Nao foi possivel buscar o usuario.')
+          throw new Error('Não foi possível buscar o usuário.')
         }
 
         const data = await parseApiResponse(response)
@@ -47,7 +47,7 @@ function MainLayout({ children }) {
       } catch (error) {
         if (error.name !== 'AbortError') {
           setUser(null)
-          setReady(true)
+          redirectToLogin()
         }
       }
     }

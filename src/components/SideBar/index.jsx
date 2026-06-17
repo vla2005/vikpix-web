@@ -26,7 +26,7 @@ import { navigate } from '@/lib/navigation'
 import SideBarTooltip from './SideBarTooltip'
 import './style.css'
 
-const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
+const apiUrl = import.meta.env.VITE_AUTH_API_URL || 'http://localhost:8080/api'
 
 const navigationItems = [
   { label: 'Central de Controle', icon: Gauge, active: true },
@@ -50,7 +50,29 @@ function getInitials(name) {
     .join('')
     .toUpperCase()
 }
+function getAvatarUrl(user) {
+  return user?.avatarUrl || user?.picture || user?.avatar || user?.imageUrl || ''
+}
 
+function UserAvatar({ src, initials }) {
+  const [imageFailed, setImageFailed] = useState(false)
+
+
+  return (
+    <span className="user-avatar">
+      {src && !imageFailed ? (
+        <img
+          src={src}
+          alt=""
+          referrerPolicy="no-referrer"
+          onError={() => setImageFailed(true)}
+        />
+      ) : (
+        initials
+      )}
+    </span>
+  )
+}
 async function requestLogout() {
   return fetch(`${apiUrl}/auth/logout`, {
     method: 'POST',
@@ -72,7 +94,7 @@ function SideBar({ user, theme = 'dark', onToggleTheme }) {
   const [logoutToast, setLogoutToast] = useState(null)
   const userName = user?.name || 'Usuario'
   const userEmail = user?.email || ''
-  const userAvatar = user?.avatarUrl
+  const userAvatar = getAvatarUrl(user)
   const userInitials = getInitials(userName)
   const isLight = theme === 'light'
   const ThemeIcon = isLight ? Moon : Sun
@@ -105,7 +127,7 @@ function SideBar({ user, theme = 'dark', onToggleTheme }) {
 
       if (!response.ok) {
         const responseText = await response.text()
-        let message = 'Nao foi possivel encerrar a sessao.'
+        let message = 'Não foi possível encerrar a sessão.'
 
         if (responseText) {
           try {
@@ -127,11 +149,11 @@ function SideBar({ user, theme = 'dark', onToggleTheme }) {
       window.setTimeout(() => {
         navigate('/login')
       }, 700)
-    } catch (error) {
+    } catch {
       setLogoutToast({
         type: 'error',
         title: 'Erro ao sair',
-        message: error.message || 'Nao foi possivel encerrar a sessao.',
+        message: 'Não foi possível encerrar a sessão.',
       })
     }
   }
@@ -210,9 +232,7 @@ function SideBar({ user, theme = 'dark', onToggleTheme }) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="user-button" type="button" title={collapsed ? userName : undefined}>
-              <span className="user-avatar">
-                {userAvatar ? <img src={userAvatar} alt="" /> : userInitials}
-              </span>
+              <UserAvatar key={`avatar-${userAvatar || userInitials}`} src={userAvatar} initials={userInitials} />
               <strong>{userName}</strong>
               <ChevronsUpDown />
             </button>
@@ -225,9 +245,7 @@ function SideBar({ user, theme = 'dark', onToggleTheme }) {
             sideOffset={8}
           >
             <div className="sidebar-user-menu-header">
-              <span className="user-avatar">
-                {userAvatar ? <img src={userAvatar} alt="" /> : userInitials}
-              </span>
+              <UserAvatar key={`avatar-${userAvatar || userInitials}`} src={userAvatar} initials={userInitials} />
               <div>
                 <strong>{userName}</strong>
                 {userEmail ? <span>{userEmail}</span> : null}
@@ -238,7 +256,7 @@ function SideBar({ user, theme = 'dark', onToggleTheme }) {
 
             <DropdownMenuItem
               className="sidebar-user-menu-item"
-              onSelect={() => navigate('/settings')}
+              onSelect={() => navigate('/settings/profile')}
             >
               <Settings className="settings-icon" />
               <span>Configurações</span>

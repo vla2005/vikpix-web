@@ -4,15 +4,26 @@ import DashboardPage from './pages/dashboard'
 import LoginPage from './pages/login'
 import ForgotPasswordPage from './pages/forgot-password'
 import ResetPasswordPage from './pages/reset-password'
-import SettingsPage from './pages/settings'
+import ProfileSettingsPage from './pages/settings/profile'
+import PasswordSettingsPage from './pages/settings/password'
+import TwoFactorSettingsPage from './pages/settings/two-factor'
 import WidgetsPage from './pages/widgets'
+import ConfirmPasswordPage from './pages/confirm-password'
+import EmbedPage from './pages/embed'
 
 function App() {
-  const [path, setPath] = useState(window.location.pathname)
+  const [route, setRoute] = useState(() => ({
+    path: window.location.pathname,
+    key: 0,
+  }))
+  const path = route.path
 
   useEffect(() => {
     function handleRouteChange() {
-      setPath(window.location.pathname)
+      setRoute((currentRoute) => ({
+        path: window.location.pathname,
+        key: currentRoute.key + 1,
+      }))
     }
 
     function handleLinkClick(event) {
@@ -33,12 +44,15 @@ function App() {
 
       const url = new URL(link.href)
 
-      if (url.origin !== window.location.origin || url.pathname === window.location.pathname) {
+      const nextPath = `${url.pathname}${url.search}`
+      const currentPath = `${window.location.pathname}${window.location.search}`
+
+      if (url.origin !== window.location.origin || nextPath === currentPath) {
         return
       }
 
       event.preventDefault()
-      window.history.pushState(null, '', url.pathname)
+      window.history.pushState(null, '', nextPath)
       handleRouteChange()
     }
 
@@ -72,11 +86,39 @@ function App() {
   }
 
   if (path === '/settings') {
-    return <SettingsPage />
+    window.history.replaceState(null, '', '/settings/profile')
+    return <ProfileSettingsPage />
+  }
+
+  if (path === '/settings/two-factor' && window.history.state?.confirmedPassword !== true) {
+    sessionStorage.setItem('vikpix_confirm_password_next', '/settings/two-factor')
+    window.history.replaceState({ guardedPath: '/settings/two-factor' }, '', '/user/confirm-password?next=/settings/two-factor')
+    return <ConfirmPasswordPage />
+  }
+
+  if (path === '/settings/two-factor') {
+    return <TwoFactorSettingsPage />
+  }
+
+  if (path === '/settings/profile') {
+    return <ProfileSettingsPage />
+  }
+
+  if (path === '/settings/password') {
+    return <PasswordSettingsPage />
+  }
+
+  if (path === '/user/confirm-password') {
+    return <ConfirmPasswordPage />
   }
 
   if (path === '/widgets') {
     return <WidgetsPage />
+  }
+
+  if (path.startsWith('/embed/')) {
+    const token = decodeURIComponent(path.replace('/embed/', '').split('/')[0] || '')
+    return <EmbedPage token={token} />
   }
 
   return (

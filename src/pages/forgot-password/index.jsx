@@ -6,7 +6,7 @@ import AuthBackground from '@/components/AuthBackground'
 import AuthToast from '@/components/AuthToast'
 
 function ForgotPasswordPage() {
-    const API_URL = import.meta.env.VITE_API_URL
+    const API_URL = import.meta.env.VITE_AUTH_API_URL
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
@@ -68,7 +68,7 @@ function ForgotPasswordPage() {
                 return
             }
 
-            setError(error.message || 'Erro ao enviar o link de redefinição.')
+            setError('Erro ao enviar o link de redefinição.')
         } finally {
             setLoading(false)
         }

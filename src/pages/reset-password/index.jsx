@@ -7,7 +7,7 @@ import { navigate } from '@/lib/navigation'
 import AuthBackground from '@/components/AuthBackground'
 
 function ResetPasswordPage() {
-    const API_URL = import.meta.env.VITE_API_URL
+    const API_URL = import.meta.env.VITE_AUTH_API_URL
     const token = new URLSearchParams(window.location.search).get('token')
 
     const [loading, setLoading] = useState(false)
@@ -71,8 +71,8 @@ function ResetPasswordPage() {
             window.setTimeout(() => {
                 navigate('/login')
             }, 1200)
-        } catch (error) {
-            setError(error.message || 'Erro ao redefinir senha.')
+        } catch {
+            setError('Erro ao redefinir senha.')
         } finally {
             setLoading(false)
         }

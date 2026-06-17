@@ -1,0 +1,164 @@
+.settings-page {
+  background: var(--dashboard-surface);
+  color: var(--dashboard-text);
+}
+
+.settings-page [class*='bg-[#101010]'],
+.settings-page [class*='bg-[#101112]'] {
+  background-color: var(--dashboard-input-bg) !important;
+}
+
+.settings-page [class*='bg-[#121212]'],
+.settings-page [class*='bg-[#151515]'],
+.settings-page [class*='bg-[#171717]'],
+.settings-page [class*='bg-[#181818]'] {
+  background-color: var(--dashboard-panel) !important;
+}
+
+.settings-page [class*='bg-[#191919]'],
+.settings-page [class*='bg-[#1b1b1b]'],
+.settings-page [class*='bg-[#1d1d1d]'],
+.settings-page [class*='bg-[#202020]'],
+.settings-page [class*='bg-[#232323]'] {
+  background-color: var(--dashboard-hover) !important;
+}
+
+.settings-page [class*='border-white/10'],
+.settings-page [class*='border-white/12'] {
+  border-color: var(--dashboard-border) !important;
+}
+
+.settings-page [class*='bg-white/10'] {
+  background-color: var(--dashboard-border) !important;
+}
+
+.settings-page [class*='text-[#f1f3f4]'],
+.settings-page [class*='text-[#f2f4f5]'],
+.settings-page [class*='text-[#f4f4f4]'],
+.settings-page [class*='text-[#e9ecef]'],
+.settings-page [class*='text-[#e6eaed]'],
+.settings-page [class*='text-[#e5e7eb]'],
+.settings-page [class*='text-[#d9dcdf]'] {
+  color: var(--dashboard-heading) !important;
+}
+
+.settings-page [class*='text-[#777d82]'],
+.settings-page [class*='text-[#8c9298]'],
+.settings-page [class*='text-[#8d9399]'],
+.settings-page [class*='text-[#9aa0a6]'],
+.settings-page [class*='text-[#c9cdd1]'],
+.settings-page [class*='text-[#d7dbde]'] {
+  color: var(--dashboard-muted) !important;
+}
+
+.settings-page [class*='text-[#4b5157]'] {
+  color: var(--dashboard-muted-strong) !important;
+}
+
+.settings-page [class*='text-[#24b8ca]'],
+.settings-page [class*='text-[#28b9ca]'] {
+  color: var(--dashboard-accent) !important;
+}
+
+.settings-page [class*='bg-[#24b8ca]'],
+.settings-page [class*='bg-[#27b8c9]'],
+.settings-page [class*='bg-[#28b9ca]'],
+.settings-page [class*='bg-[#167c89]'] {
+  background-color: var(--dashboard-accent) !important;
+}
+
+.settings-page [class*='text-[#071113]'],
+.settings-page [class*='text-[#071315]'] {
+  color: var(--dashboard-accent-text) !important;
+}
+
+.settings-page input {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  border-color: var(--dashboard-border) !important;
+  background-color: var(--dashboard-input-bg) !important;
+  color: var(--dashboard-text) !important;
+}
+
+.settings-page input::placeholder {
+  color: var(--dashboard-muted);
+}
+
+.settings-page input:focus {
+  border-color: var(--dashboard-accent) !important;
+  background-color: var(--dashboard-input-focus) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--dashboard-accent) 25%, transparent) !important;
+}
+
+.settings-page input.settings-input-error,
+.settings-page input.settings-input-error:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 2px rgb(239 68 68 / 20%) !important;
+}
+
+.settings-password-requirements {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 12px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.settings-password-requirements li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  color: var(--dashboard-muted);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.25;
+  transition: color 160ms ease;
+}
+
+.settings-password-requirements span {
+  display: grid;
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--dashboard-hover);
+  color: var(--dashboard-muted);
+  font-size: 10px;
+  line-height: 1;
+}
+
+.settings-password-requirements li.is-valid {
+  color: var(--dashboard-text);
+}
+
+.settings-password-requirements li.is-valid span {
+  background: var(--dashboard-accent);
+  color: var(--dashboard-accent-text);
+}
+
+.settings-page nav button {
+  color: var(--dashboard-text) !important;
+}
+
+.settings-page .settings-tab {
+  background: transparent !important;
+  color: var(--dashboard-text) !important;
+}
+
+.settings-page .settings-tab:hover,
+.settings-page .settings-tab.is-active {
+  background: var(--dashboard-hover) !important;
+}
+
+.settings-page .bg-transparent:hover {
+  color: var(--dashboard-text);
+}
+
+.settings-page [class*='shadow-[0_24px_80px'] {
+  box-shadow: 0 24px 80px var(--dashboard-shadow) !important;
+}
