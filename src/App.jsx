@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import RegisterPage from './pages/register'
 import DashboardPage from './pages/dashboard'
 import LoginPage from './pages/login'
@@ -10,6 +10,8 @@ import TwoFactorSettingsPage from './pages/settings/two-factor'
 import WidgetsPage from './pages/widgets'
 import ConfirmPasswordPage from './pages/confirm-password'
 import EmbedPage from './pages/embed'
+import DonationPage from './pages/donation-page'
+import PublicDonationPage from './pages/public-donation'
 
 function App() {
   const [route, setRoute] = useState(() => ({
@@ -116,9 +118,19 @@ function App() {
     return <WidgetsPage />
   }
 
+  if (path === '/donation-page') {
+    return <DonationPage />
+  }
+
   if (path.startsWith('/embed/')) {
     const token = decodeURIComponent(path.replace('/embed/', '').split('/')[0] || '')
     return <EmbedPage token={token} />
+  }
+
+  const singlePublicSegment = path.split('/').filter(Boolean)
+
+  if (singlePublicSegment.length === 1) {
+    return <PublicDonationPage userName={decodeURIComponent(singlePublicSegment[0])} />
   }
 
   return (

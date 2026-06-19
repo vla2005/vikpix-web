@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import {
   BarChart3,
   Gauge,
@@ -29,14 +29,13 @@ import './style.css'
 const apiUrl = import.meta.env.VITE_AUTH_API_URL || 'http://localhost:8080/api'
 
 const navigationItems = [
-  { label: 'Central de Controle', icon: Gauge, active: true },
-  { label: 'Saldo e Transações', icon: WalletCards },
-  { label: 'Relatórios', icon: BarChart3 },
-  { label: 'Página de Doação', icon: HandCoins },
-  { label: 'Widgets', icon: LayoutGrid },
-  { label: 'Integrações', icon: Plug },
+  { label: 'Central de Controle', icon: Gauge, href: '/dashboard' },
+  { label: 'Saldo e Transações', icon: WalletCards, href: '/dashboard' },
+  { label: 'Relatórios', icon: BarChart3, href: '/dashboard' },
+  { label: 'Página de Doação', icon: HandCoins, href: '/donation-page' },
+  { label: 'Widgets', icon: LayoutGrid, href: '/widgets' },
+  { label: 'Integrações', icon: Plug, href: '/dashboard' },
 ]
-
 function getInitials(name) {
   if (!name) {
     return 'U'
@@ -127,7 +126,7 @@ function SideBar({ user, theme = 'dark', onToggleTheme }) {
 
       if (!response.ok) {
         const responseText = await response.text()
-        let message = 'Não foi possível encerrar a sessão.'
+        let message = 'NÃ£o foi possÃ­vel encerrar a sessÃ£o.'
 
         if (responseText) {
           try {
@@ -153,7 +152,7 @@ function SideBar({ user, theme = 'dark', onToggleTheme }) {
       setLogoutToast({
         type: 'error',
         title: 'Erro ao sair',
-        message: 'Não foi possível encerrar a sessão.',
+        message: 'NÃ£o foi possÃ­vel encerrar a sessÃ£o.',
       })
     }
   }
@@ -201,8 +200,8 @@ function SideBar({ user, theme = 'dark', onToggleTheme }) {
         <p>VikPix</p>
         {navigationItems.map((item) => {
           const Icon = item.icon
-          const href = item.label === 'Widgets' ? '/widgets' : '/dashboard'
-          const isActive = currentPath === '/widgets' ? item.label === 'Widgets' : item.active
+          const href = item.href
+          const isActive = currentPath === href || (currentPath === '/' && href === '/dashboard')
 
           return (
             <SideBarTooltip label={item.label} key={item.label}>
