@@ -1,0 +1,970 @@
+﻿.public-donation-page {
+  --vk-main: #0ea5e9;
+
+  position: relative;
+  min-height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px;
+  background: #05070b;
+  color: #ffffff;
+  font-family:
+    "Instrument Sans",
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+.vikpix-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #05070b;
+}
+
+.vikpix-bg__base {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at 50% 12%,
+      color-mix(in srgb, var(--vk-main) 12%, transparent),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 50% 92%,
+      color-mix(in srgb, var(--vk-main) 9%, transparent),
+      transparent 42%
+    ),
+    linear-gradient(180deg, #07111b 0%, #05070b 42%, #05070b 100%);
+}
+
+.vikpix-bg__grid {
+  position: absolute;
+  inset: -90px;
+  opacity: 0.18;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 72px 72px;
+  animation: vikpixGridMove 36s linear infinite;
+}
+
+.vikpix-bg__glow {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(72px);
+  mix-blend-mode: screen;
+}
+
+.vikpix-bg__glow--left {
+  left: -18%;
+  top: 26%;
+  width: 680px;
+  height: 420px;
+  background:
+    radial-gradient(
+      circle,
+      color-mix(in srgb, var(--vk-main) 34%, transparent) 0%,
+      color-mix(in srgb, var(--vk-main) 13%, transparent) 45%,
+      transparent 72%
+    );
+  animation: vikpixGlowLeft 18s ease-in-out infinite;
+}
+
+.vikpix-bg__glow--right {
+  right: -16%;
+  top: 10%;
+  width: 680px;
+  height: 520px;
+  background:
+    radial-gradient(
+      circle,
+      color-mix(in srgb, var(--vk-main) 24%, #2563ff 10%) 0%,
+      color-mix(in srgb, var(--vk-main) 11%, transparent) 44%,
+      transparent 74%
+    );
+  opacity: 0.72;
+  animation: vikpixGlowRight 22s ease-in-out infinite;
+}
+
+.vikpix-bg__glow--bottom {
+  left: 28%;
+  bottom: -28%;
+  width: 720px;
+  height: 360px;
+  background:
+    radial-gradient(
+      circle,
+      color-mix(in srgb, var(--vk-main) 18%, transparent) 0%,
+      transparent 70%
+    );
+  opacity: 0.7;
+}
+
+.vikpix-bg__beam {
+  position: absolute;
+  height: 3px;
+  border-radius: 999px;
+  filter: blur(2px);
+  opacity: 0.72;
+  transform-origin: center;
+}
+
+.vikpix-bg__beam--one {
+  left: -12%;
+  top: 64%;
+  width: 128vw;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--vk-main) 38%, transparent) 38%,
+      color-mix(in srgb, var(--vk-main) 78%, #2563ff 22%) 52%,
+      transparent 76%
+    );
+  box-shadow: 0 0 26px color-mix(in srgb, var(--vk-main) 62%, transparent);
+  animation: vikpixBeamOne 11s ease-in-out infinite alternate;
+}
+
+.vikpix-bg__beam--two {
+  right: -20%;
+  top: 24%;
+  width: 88vw;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--vk-main) 58%, transparent) 50%,
+      rgba(255, 255, 255, 0.24) 58%,
+      transparent 86%
+    );
+  box-shadow: 0 0 22px color-mix(in srgb, var(--vk-main) 48%, transparent);
+  animation: vikpixBeamTwo 14s ease-in-out infinite alternate;
+}
+
+.vikpix-bg__beam--three {
+  left: 8%;
+  bottom: 17%;
+  width: 48vw;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--vk-main) 70%, transparent) 48%,
+      transparent 100%
+    );
+  box-shadow: 0 0 20px color-mix(in srgb, var(--vk-main) 52%, transparent);
+  animation: vikpixBeamThree 16s ease-in-out infinite alternate;
+}
+
+.vikpix-bg__logo {
+  position: absolute;
+  right: 7%;
+  top: 23%;
+  width: min(560px, 36vw);
+  max-width: none;
+  opacity: 0.07;
+  filter: grayscale(1) invert(1) blur(1.2px);
+  transform: rotate(-8deg);
+  animation: vikpixLogoFloat 21s ease-in-out infinite;
+}
+
+.vikpix-bg__spark {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--vk-main);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--vk-main) 80%, transparent);
+  animation: vikpixSpark 4.5s ease-in-out infinite;
+}
+
+.vikpix-bg__spark--one {
+  left: 25%;
+  top: 31%;
+}
+
+.vikpix-bg__spark--two {
+  right: 26%;
+  bottom: 25%;
+  animation-delay: 1.5s;
+}
+
+.vikpix-bg__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, transparent 0%, rgba(5, 7, 11, 0.22) 42%, rgba(5, 7, 11, 0.94) 100%),
+    linear-gradient(90deg, rgba(5, 7, 11, 0.86) 0%, transparent 48%, rgba(5, 7, 11, 0.86) 100%);
+}
+
+.donation-page-content {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 740px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.donation-card {
+  position: relative;
+  width: 100%;
+  padding: 28px 34px 32px;
+  border-radius: 24px;
+  border: 1px solid color-mix(in srgb, var(--vk-main) 22%, rgba(255, 255, 255, 0.17));
+  background:
+    linear-gradient(180deg, rgba(10, 17, 27, 0.88) 0%, rgba(7, 11, 18, 0.93) 100%);
+  box-shadow:
+    0 28px 90px rgba(0, 0, 0, 0.46),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(24px);
+}
+
+.donation-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--vk-main) 16%, transparent),
+      transparent 32%
+    );
+  opacity: 0.32;
+}
+
+.donation-profile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.donation-avatar {
+  width: 66px;
+  height: 66px;
+  flex: 0 0 auto;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 800;
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--vk-main) 80%, #2563ff 20%),
+    0 0 28px color-mix(in srgb, var(--vk-main) 36%, transparent);
+}
+
+.donation-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.donation-profile__content {
+  min-width: 0;
+  flex: 1;
+}
+
+.donation-profile__content strong {
+  display: block;
+  max-width: 100%;
+  margin-bottom: 16px;
+  overflow: hidden;
+  color: #f8fafc;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.donation-profile__content span {
+  display: block;
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), transparent);
+}
+
+.donation-field {
+  position: relative;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 14px;
+  background: rgba(8, 13, 21, 0.62);
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+}
+
+.donation-field + .donation-field,
+.donation-toggle + .donation-field,
+.donation-field + .donation-toggle {
+  margin-top: 14px;
+}
+
+.donation-field:focus-within {
+  border-color: color-mix(in srgb, var(--vk-main) 72%, #2563ff 28%);
+  background: rgba(7, 12, 20, 0.8);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--vk-main) 44%, transparent),
+    0 0 28px color-mix(in srgb, var(--vk-main) 16%, transparent);
+}
+
+.donation-field input,
+.donation-field textarea {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #f8fafc;
+  font: inherit;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.donation-field input {
+  height: 62px;
+  padding: 0 58px 0 22px;
+}
+
+.donation-field input::placeholder,
+.donation-field textarea::placeholder {
+  color: rgba(203, 213, 225, 0.62);
+}
+
+.donation-field input:disabled,
+.donation-field textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.donation-field__icon {
+  position: absolute;
+  right: 22px;
+  width: 23px;
+  height: 23px;
+  color: rgba(203, 213, 225, 0.68);
+  pointer-events: none;
+}
+
+.donation-field--textarea {
+  min-height: 126px;
+  align-items: stretch;
+}
+
+.donation-field--textarea textarea {
+  min-height: 124px;
+  resize: none;
+  padding: 24px 58px 22px 22px;
+  line-height: 1.45;
+}
+
+.donation-field__icon--textarea {
+  right: 22px;
+  bottom: 22px;
+}
+
+.donation-toggle {
+  width: 100%;
+  min-height: 64px;
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 14px;
+  background: rgba(8, 13, 21, 0.62);
+  padding: 0 20px;
+  color: #ffffff;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    transform 180ms ease;
+}
+
+.donation-toggle:hover {
+  border-color: color-mix(in srgb, var(--vk-main) 48%, rgba(255, 255, 255, 0.24));
+  background: rgba(10, 16, 26, 0.86);
+}
+
+.donation-toggle:active {
+  transform: scale(0.992);
+}
+
+.donation-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.donation-toggle__label {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #f8fafc;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.donation-toggle__label svg {
+  width: 23px;
+  height: 23px;
+  color: var(--vk-main);
+}
+
+.donation-toggle__switch {
+  position: relative;
+  width: 48px;
+  height: 28px;
+  flex: 0 0 auto;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(100, 116, 139, 0.46);
+  transition:
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.donation-toggle__switch span {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+  transition: transform 180ms ease;
+}
+
+.donation-toggle.is-active .donation-toggle__switch {
+  background: color-mix(in srgb, var(--vk-main) 84%, #2563ff 16%);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--vk-main) 28%, transparent);
+}
+
+.donation-toggle.is-active .donation-toggle__switch span {
+  transform: translateX(20px);
+}
+
+.donation-amount {
+  margin-top: 22px;
+}
+
+.donation-amount > strong {
+  display: block;
+  margin-bottom: 12px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.donation-field--amount {
+  min-height: 58px;
+  overflow: hidden;
+}
+
+.donation-field--amount input {
+  height: 58px;
+  padding: 0 20px;
+  color: #f8fafc;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.donation-amount__prefix {
+  height: 58px;
+  min-width: 64px;
+  display: grid;
+  place-items: center;
+  border-right: 1px solid rgba(148, 163, 184, 0.2);
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.donation-amount p {
+  margin: 12px 0 0;
+  color: rgba(203, 213, 225, 0.78);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.donation-submit {
+  width: 100%;
+  min-height: 58px;
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  border: 0;
+  border-radius: 12px;
+  background:
+    linear-gradient(
+      100deg,
+      color-mix(in srgb, var(--vk-main) 88%, white 12%) 0%,
+      color-mix(in srgb, var(--vk-main) 72%, #2563ff 28%) 52%,
+      #2563ff 100%
+    );
+  color: #ffffff;
+  font: inherit;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  cursor: pointer;
+  box-shadow:
+    0 16px 34px color-mix(in srgb, var(--vk-main) 24%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  transition:
+    filter 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.donation-submit:hover {
+  filter: brightness(1.08);
+  box-shadow:
+    0 20px 42px color-mix(in srgb, var(--vk-main) 32%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.donation-submit:active {
+  transform: scale(0.992);
+}
+
+.donation-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.64;
+}
+
+.donation-submit svg {
+  width: 24px;
+  height: 24px;
+}
+
+.donation-terms {
+  max-width: 680px;
+  margin: 26px auto 0;
+  color: rgba(203, 213, 225, 0.76);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.donation-terms a {
+  color: color-mix(in srgb, var(--vk-main) 76%, #60a5fa 24%);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.donation-terms a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.donation-brand {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #ffffff;
+}
+
+.donation-brand span {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--vk-main) 88%, white 12%),
+      #2563ff
+    );
+  box-shadow: 0 0 28px color-mix(in srgb, var(--vk-main) 28%, transparent);
+}
+
+.donation-brand img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.donation-brand strong {
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+}
+
+.donation-loading {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 740px);
+}
+
+.donation-loading__card {
+  height: 640px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.06),
+      rgba(255, 255, 255, 0.11),
+      rgba(255, 255, 255, 0.06)
+    );
+  background-size: 220% 100%;
+  animation: vikpixLoading 1.6s ease-in-out infinite;
+  backdrop-filter: blur(24px);
+}
+
+.donation-error-card {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 480px);
+  padding: 28px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  background: rgba(7, 11, 18, 0.88);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
+  text-align: center;
+  backdrop-filter: blur(24px);
+}
+
+.donation-error-card h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 850;
+  letter-spacing: -0.04em;
+}
+
+.donation-error-card p {
+  margin: 10px 0 0;
+  color: rgba(203, 213, 225, 0.75);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+@keyframes vikpixGridMove {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-72px, -72px, 0);
+  }
+}
+
+@keyframes vikpixGlowLeft {
+  0%,
+  100% {
+    transform: translate3d(-4%, 2%, 0) scale(1);
+    opacity: 0.58;
+  }
+
+  50% {
+    transform: translate3d(7%, -3%, 0) scale(1.12);
+    opacity: 0.82;
+  }
+}
+
+@keyframes vikpixGlowRight {
+  0%,
+  100% {
+    transform: translate3d(5%, -3%, 0) scale(1);
+    opacity: 0.52;
+  }
+
+  50% {
+    transform: translate3d(-7%, 6%, 0) scale(1.1);
+    opacity: 0.78;
+  }
+}
+
+@keyframes vikpixBeamOne {
+  from {
+    transform: translate3d(-9%, 12%, 0) rotate(-14deg);
+  }
+
+  to {
+    transform: translate3d(8%, -10%, 0) rotate(-14deg);
+  }
+}
+
+@keyframes vikpixBeamTwo {
+  from {
+    transform: translate3d(8%, -8%, 0) rotate(-15deg);
+  }
+
+  to {
+    transform: translate3d(-8%, 7%, 0) rotate(-15deg);
+  }
+}
+
+@keyframes vikpixBeamThree {
+  from {
+    transform: translate3d(-6%, 8%, 0) rotate(-14deg);
+    opacity: 0.45;
+  }
+
+  to {
+    transform: translate3d(8%, -8%, 0) rotate(-14deg);
+    opacity: 0.9;
+  }
+}
+
+@keyframes vikpixLogoFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-8deg) scale(0.98);
+    opacity: 0.055;
+  }
+
+  50% {
+    transform: translate3d(-2%, -1%, 0) rotate(-8deg) scale(1.04);
+    opacity: 0.09;
+  }
+}
+
+@keyframes vikpixSpark {
+  0%,
+  100% {
+    transform: scale(0.72);
+    opacity: 0.28;
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 0.72;
+  }
+}
+
+@keyframes vikpixLoading {
+  from {
+    background-position: 120% 0;
+  }
+
+  to {
+    background-position: -120% 0;
+  }
+}
+
+@media (min-width: 721px) {
+  .donation-page-content {
+    width: min(100%, 620px);
+  }
+
+  .donation-card {
+    padding: 24px 30px 28px;
+    border-radius: 22px;
+  }
+
+  .donation-profile {
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .donation-avatar {
+    width: 58px;
+    height: 58px;
+  }
+
+  .donation-profile__content strong {
+    margin-bottom: 13px;
+    font-size: 20px;
+  }
+
+  .donation-field,
+  .donation-toggle {
+    min-height: 56px;
+  }
+
+  .donation-field input {
+    height: 54px;
+    padding: 0 54px 0 20px;
+  }
+
+  .donation-field input,
+  .donation-field textarea,
+  .donation-toggle__label {
+    font-size: 16px;
+  }
+
+  .donation-field__icon,
+  .donation-toggle__label svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .donation-field--textarea {
+    min-height: 108px;
+  }
+
+  .donation-field--textarea textarea {
+    min-height: 106px;
+    padding: 20px 54px 20px 20px;
+  }
+
+  .donation-amount {
+    margin-top: 18px;
+  }
+
+  .donation-field--amount,
+  .donation-submit {
+    min-height: 52px;
+  }
+
+  .donation-field--amount input,
+  .donation-amount__prefix {
+    height: 52px;
+  }
+
+  .donation-amount__prefix {
+    min-width: 58px;
+  }
+
+  .donation-submit {
+    margin-top: 18px;
+    font-size: 19px;
+  }
+
+  .donation-submit svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .donation-terms {
+    margin-top: 22px;
+    font-size: 14px;
+  }
+
+  .donation-brand {
+    margin-top: 20px;
+  }
+
+  .donation-brand span {
+    width: 38px;
+    height: 38px;
+  }
+
+  .donation-brand img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .donation-brand strong {
+    font-size: 28px;
+  }
+}
+@media (max-width: 720px) {
+  .public-donation-page {
+    padding: 28px 14px;
+  }
+
+  .donation-card {
+    padding: 22px 18px 24px;
+    border-radius: 22px;
+  }
+
+  .donation-profile {
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .donation-avatar {
+    width: 56px;
+    height: 56px;
+  }
+
+  .donation-profile__content strong {
+    font-size: 18px;
+  }
+
+  .donation-field,
+  .donation-toggle {
+    min-height: 58px;
+  }
+
+  .donation-field input {
+    height: 56px;
+    font-size: 16px;
+  }
+
+  .donation-toggle__label {
+    gap: 12px;
+    font-size: 16px;
+  }
+
+  .donation-field--textarea {
+    min-height: 116px;
+  }
+
+  .donation-field--textarea textarea {
+    min-height: 114px;
+    font-size: 16px;
+  }
+
+  .donation-submit {
+    min-height: 56px;
+    font-size: 19px;
+  }
+
+  .donation-terms {
+    font-size: 13px;
+  }
+
+  .donation-brand strong {
+    font-size: 28px;
+  }
+
+  .vikpix-bg__logo {
+    right: -14%;
+    top: 25%;
+    width: 72vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vikpix-bg__grid,
+  .vikpix-bg__glow,
+  .vikpix-bg__beam,
+  .vikpix-bg__logo,
+  .vikpix-bg__spark,
+  .donation-loading__card {
+    animation: none !important;
+  }
+}
