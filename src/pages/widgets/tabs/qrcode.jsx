@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+﻿import { useEffect, useRef, useState } from 'react'
 import {
   Copy,
   EyeOff,
@@ -6,9 +6,11 @@ import {
   MessageSquare,
   Palette,
   QrCode,
+  Save,
   X,
 } from 'lucide-react'
 import DonationQrCode from '@/components/DonationQrCode'
+import AuthToast from '@/components/AuthToast'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { apiFetch, parseApiResponse } from '@/lib/api'
@@ -80,42 +82,17 @@ function ToggleRow({ icon: Icon, title, description, checked, onChange }) {
   )
 }
 
-function applyQrCodeConfig(data, setters) {
-  if (!data) {
-    return
-  }
+function normalizeQrCodeConfig(data) {
+  const config = data?.widget || data?.qrcode || data || {}
 
-  const config = data?.widget || data?.qrcode || data
-
-  const primaryColor = config.primaryColor || config.color
-  const backgroundColor = config.secondaryColor || config.backgroundColor
-
-  if (primaryColor) {
-    setters.setPrimaryColor(primaryColor)
-  }
-
-  if (backgroundColor) {
-    setters.setBackgroundColor(backgroundColor)
-  }
-
-  if (typeof config.message === 'string') {
-    setters.setMessage(config.message)
-  }
-
-  if (typeof config.autoHide === 'boolean') {
-    setters.setAutoHide(config.autoHide)
-  }
-
-  if (typeof config.showLink === 'boolean') {
-    setters.setShowLink(config.showLink)
-  }
-
-  if (typeof config.showMessage === 'boolean') {
-    setters.setShowMessage(config.showMessage)
-  }
-
-  if (config.token) {
-    setters.setWidgetToken(config.token)
+  return {
+    primaryColor: config.primaryColor || config.color || defaultQrColors.primary,
+    secondaryColor: config.secondaryColor || config.backgroundColor || defaultQrColors.background,
+    message: typeof config.message === 'string' ? config.message : 'Aponte a câmera do celular',
+    autoHide: typeof config.autoHide === 'boolean' ? config.autoHide : false,
+    showLink: typeof config.showLink === 'boolean' ? config.showLink : true,
+    showMessage: typeof config.showMessage === 'boolean' ? config.showMessage : true,
+    token: config.token || '',
   }
 }
 
@@ -209,6 +186,18 @@ function QrCodeTab({ user, header }) {
   const [showMessage, setShowMessage] = useState(true)
   const [embedModalOpen, setEmbedModalOpen] = useState(false)
   const [embedUrlCopied, setEmbedUrlCopied] = useState(false)
+  const [initialConfig, setInitialConfig] = useState(null)
+  const [saving, setSaving] = useState(false)
+  const [toast, setToast] = useState(null)
+  const currentConfig = {
+    primaryColor,
+    secondaryColor,
+    message,
+    autoHide,
+    showLink,
+    showMessage,
+  }
+  const hasUnsavedChanges = initialConfig ? JSON.stringify(currentConfig) !== JSON.stringify(initialConfig) : false
   const hasCustomColors =
     primaryColor.toLowerCase() !== defaultQrColors.primary ||
     secondaryColor.toLowerCase() !== defaultQrColors.background
@@ -227,14 +216,22 @@ function QrCodeTab({ user, header }) {
         const data = await parseApiResponse(response)
 
         if (response.ok) {
-          applyQrCodeConfig(data, {
-            setPrimaryColor,
-            setBackgroundColor: setSecondaryColor,
-            setMessage,
-            setAutoHide,
-            setShowLink,
-            setShowMessage,
-            setWidgetToken,
+          const nextConfig = normalizeQrCodeConfig(data)
+
+          setPrimaryColor(nextConfig.primaryColor)
+          setSecondaryColor(nextConfig.secondaryColor)
+          setMessage(nextConfig.message)
+          setAutoHide(nextConfig.autoHide)
+          setShowLink(nextConfig.showLink)
+          setShowMessage(nextConfig.showMessage)
+          setWidgetToken(nextConfig.token)
+          setInitialConfig({
+            primaryColor: nextConfig.primaryColor,
+            secondaryColor: nextConfig.secondaryColor,
+            message: nextConfig.message,
+            autoHide: nextConfig.autoHide,
+            showLink: nextConfig.showLink,
+            showMessage: nextConfig.showMessage,
           })
         }
       } catch (error) {
@@ -264,9 +261,52 @@ function QrCodeTab({ user, header }) {
     setEmbedUrlCopied(true)
     window.setTimeout(() => setEmbedUrlCopied(false), 2000)
   }
+  function showToast(type, title, message) {
+    setToast({ type, title, message })
+    window.setTimeout(() => setToast(null), 2000)
+  }
+
+  async function saveQrCodeWidget() {
+    if (!hasUnsavedChanges || saving) {
+      return
+    }
+
+    setSaving(true)
+
+    try {
+      const response = await apiFetch('/widgets/qrcode', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(currentConfig),
+      })
+
+      const data = await parseApiResponse(response)
+
+      if (!response.ok) {
+        throw new Error('save-failed')
+      }
+
+      const savedConfig = normalizeQrCodeConfig(data || currentConfig)
+
+      if (savedConfig.token) {
+        setWidgetToken(savedConfig.token)
+      }
+
+      setInitialConfig({ ...currentConfig })
+      showToast('success', 'Widget salvo', 'Suas alterações foram salvas.')
+    } catch {
+      showToast('error', 'Erro ao salvar', 'Não foi possível salvar o widget.')
+    } finally {
+      setSaving(false)
+    }
+  }
 
   return (
-    <div className="grid h-full min-h-0 grid-cols-[minmax(0,1fr)_320px] max-[1120px]:grid-cols-1">
+    <div className="relative grid h-full min-h-0 grid-cols-[minmax(0,1fr)_320px] max-[1120px]:grid-cols-1">
+      <AuthToast type={toast?.type} title={toast?.title} message={toast?.message} />
       <EmbedWidgetModal
         copied={embedUrlCopied}
         open={embedModalOpen}
@@ -279,6 +319,13 @@ function QrCodeTab({ user, header }) {
         {header}
 
         <div className="px-8 pb-6 max-[720px]:px-4">
+        {hasUnsavedChanges ? (
+          <div className="pointer-events-none absolute right-[344px] top-6 z-10 flex items-center gap-2 rounded-full border border-[var(--dashboard-border)] bg-[var(--dashboard-panel)] px-3 py-2 text-xs font-bold text-[var(--dashboard-text)] shadow-[0_14px_44px_var(--dashboard-shadow)] max-[1120px]:right-8 max-[720px]:right-4">
+            <span className="size-2 rounded-full bg-[var(--dashboard-accent)]" />
+            Alterações não salvas
+          </div>
+        ) : null}
+
         <div className="mb-4 flex items-center gap-2">
           <QrCode className="size-4 text-[var(--dashboard-accent)]" />
           <h2 className="m-0 text-base font-extrabold text-[var(--dashboard-text)]">
@@ -304,7 +351,7 @@ function QrCodeTab({ user, header }) {
 
             <div className="grid grid-cols-2 gap-4 max-[760px]:grid-cols-1">
               <ColorField label="Cor principal" value={primaryColor} onChange={setPrimaryColor} />
-              <ColorField label="Cor secundária" value={secondaryColor} onChange={setSecondaryColor} />
+              <ColorField label="Cor secundÃ¡ria" value={secondaryColor} onChange={setSecondaryColor} />
             </div>
 
             {hasCustomColors ? (
@@ -316,7 +363,7 @@ function QrCodeTab({ user, header }) {
                   setSecondaryColor(defaultQrColors.background)
                 }}
               >
-                Restaurar cores padrão
+                Restaurar cores padrÃ£o
               </button>
             ) : null}
           </div>
@@ -353,6 +400,18 @@ function QrCodeTab({ user, header }) {
               onChange={(event) => setMessage(event.target.value)}
             />
           </label>
+
+          <div className="flex justify-end pt-1">
+            <Button
+              className="h-11 min-w-36 cursor-pointer rounded-full border-0 bg-[var(--dashboard-accent)] px-6 text-sm font-bold text-[var(--dashboard-accent-text)] hover:bg-[var(--dashboard-accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+              type="button"
+              disabled={!hasUnsavedChanges || saving}
+              onClick={saveQrCodeWidget}
+            >
+              <Save className="size-4" />
+              {saving ? 'Salvando...' : 'Salvar'}
+            </Button>
+          </div>
         </div>
         </div>
       </div>
@@ -421,3 +480,12 @@ function QrCodeTab({ user, header }) {
 }
 
 export default QrCodeTab
+
+
+
+
+
+
+
+
+
