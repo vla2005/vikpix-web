@@ -1,7 +1,11 @@
 services:
-  web:
+  vikpix-web:
     build:
       context: .
-    ports:
-      - "3000:80"
-    restart: unless-stopped
+      args:
+        VITE_AUTH_API_URL: ${VITE_AUTH_API_URL}
+        VITE_APP_URL: ${VITE_APP_URL}
+    expose:
+      - "80"
+    networks:
+      - proxy

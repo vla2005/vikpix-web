@@ -87,7 +87,7 @@
   background:
     radial-gradient(
       circle,
-      color-mix(in srgb, var(--vk-main) 24%, #2563ff 10%) 0%,
+      color-mix(in srgb, var(--vk-main) 70%, white 8%) 0%,
       color-mix(in srgb, var(--vk-main) 11%, transparent) 44%,
       transparent 74%
     );
@@ -127,7 +127,7 @@
       90deg,
       transparent 0%,
       color-mix(in srgb, var(--vk-main) 38%, transparent) 38%,
-      color-mix(in srgb, var(--vk-main) 78%, #2563ff 22%) 52%,
+      color-mix(in srgb, var(--vk-main) 86%, white 14%) 52%,
       transparent 76%
     );
   box-shadow: 0 0 26px color-mix(in srgb, var(--vk-main) 62%, transparent);
@@ -265,7 +265,7 @@
   font-size: 17px;
   font-weight: 800;
   box-shadow:
-    0 0 0 2px color-mix(in srgb, var(--vk-main) 80%, #2563ff 20%),
+    0 0 0 2px color-mix(in srgb, var(--vk-main) 82%, white 18%),
     0 0 28px color-mix(in srgb, var(--vk-main) 36%, transparent);
 }
 
@@ -321,7 +321,7 @@
 }
 
 .donation-field:focus-within {
-  border-color: color-mix(in srgb, var(--vk-main) 72%, #2563ff 28%);
+  border-color: color-mix(in srgb, var(--vk-main) 86%, black 14%);
   background: rgba(7, 12, 20, 0.8);
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--vk-main) 44%, transparent),
@@ -456,7 +456,7 @@
 }
 
 .donation-toggle.is-active .donation-toggle__switch {
-  background: color-mix(in srgb, var(--vk-main) 84%, #2563ff 16%);
+  background: color-mix(in srgb, var(--vk-main) 86%, black 14%);
   box-shadow: 0 0 24px color-mix(in srgb, var(--vk-main) 28%, transparent);
 }
 
@@ -521,8 +521,8 @@
     linear-gradient(
       100deg,
       color-mix(in srgb, var(--vk-main) 88%, white 12%) 0%,
-      color-mix(in srgb, var(--vk-main) 72%, #2563ff 28%) 52%,
-      #2563ff 100%
+      var(--vk-main) 52%,
+      color-mix(in srgb, var(--vk-main) 82%, black 18%) 100%
     );
   color: #ffffff;
   font: inherit;
@@ -571,7 +571,7 @@
 }
 
 .donation-terms a {
-  color: color-mix(in srgb, var(--vk-main) 76%, #60a5fa 24%);
+  color: color-mix(in srgb, var(--vk-main) 88%, white 12%);
   font-weight: 700;
   text-decoration: none;
 }
@@ -601,7 +601,7 @@
     linear-gradient(
       135deg,
       color-mix(in srgb, var(--vk-main) 88%, white 12%),
-      #2563ff
+      color-mix(in srgb, var(--vk-main) 82%, black 18%)
     );
   box-shadow: 0 0 28px color-mix(in srgb, var(--vk-main) 28%, transparent);
 }
@@ -966,5 +966,221 @@
   .vikpix-bg__spark,
   .donation-loading__card {
     animation: none !important;
+  }
+}
+.donation-form-error {
+  margin: 14px 0 0;
+  color: #fca5a5;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.donation-submit__spinner,
+.pix-payment-status__spinner {
+  animation: vikpixSpin 950ms linear infinite;
+}
+
+.pix-payment-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(2, 6, 12, 0.76);
+  backdrop-filter: blur(12px);
+  animation: pixOverlayIn 180ms ease-out both;
+}
+
+.pix-payment-card {
+  width: min(100%, 460px);
+  max-height: min(760px, calc(100dvh - 40px));
+  overflow-y: auto;
+  border: 1px solid color-mix(in srgb, var(--vk-main) 24%, rgba(255, 255, 255, 0.18));
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(10, 17, 27, 0.94) 0%, rgba(7, 11, 18, 0.98) 100%);
+  box-shadow:
+    0 30px 96px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  padding: 24px;
+  color: #f8fafc;
+  animation: pixCardIn 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.pix-payment-status {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid color-mix(in srgb, var(--vk-main) 26%, rgba(255, 255, 255, 0.12));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--vk-main) 10%, rgba(255, 255, 255, 0.06));
+  padding: 8px 12px;
+  color: color-mix(in srgb, var(--vk-main) 84%, white 16%);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.pix-payment-status svg {
+  width: 16px;
+  height: 16px;
+}
+
+.pix-payment-card h2 {
+  margin: 18px 0 0;
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+}
+
+.pix-payment-card p {
+  margin: 8px 0 0;
+  color: rgba(203, 213, 225, 0.76);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.pix-payment-qrcode {
+  width: min(100%, 260px);
+  margin: 22px auto 0;
+  padding: 14px;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 20px 52px color-mix(in srgb, var(--vk-main) 18%, transparent);
+}
+
+.pix-payment-qrcode img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.pix-payment-code {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.pix-payment-code span {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.pix-payment-code textarea {
+  min-height: 92px;
+  resize: none;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 14px;
+  background: rgba(8, 13, 21, 0.72);
+  padding: 13px;
+  color: #dbeafe;
+  font: inherit;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  outline: 0;
+}
+
+.pix-payment-code textarea:focus {
+  border-color: color-mix(in srgb, var(--vk-main) 72%, white 10%);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--vk-main) 22%, transparent);
+}
+
+.pix-payment-copy,
+.pix-payment-link,
+.pix-payment-secondary {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 850;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    filter 180ms ease,
+    transform 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+
+.pix-payment-copy {
+  border: 0;
+  background:
+    linear-gradient(
+      100deg,
+      color-mix(in srgb, var(--vk-main) 88%, white 12%) 0%,
+      var(--vk-main) 54%,
+      color-mix(in srgb, var(--vk-main) 82%, black 18%) 100%
+    );
+  color: #ffffff;
+}
+
+.pix-payment-link,
+.pix-payment-secondary {
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f8fafc;
+}
+
+.pix-payment-copy svg,
+.pix-payment-link svg {
+  width: 17px;
+  height: 17px;
+}
+
+.pix-payment-copy:hover,
+.pix-payment-link:hover,
+.pix-payment-secondary:hover {
+  filter: brightness(1.08);
+  border-color: color-mix(in srgb, var(--vk-main) 42%, rgba(255, 255, 255, 0.22));
+}
+
+.pix-payment-copy:active,
+.pix-payment-link:active,
+.pix-payment-secondary:active {
+  transform: scale(0.992);
+}
+
+@keyframes pixOverlayIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pixCardIn {
+  from {
+    transform: translate3d(0, 14px, 0) scale(0.975);
+    opacity: 0;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes vikpixSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
   }
 }

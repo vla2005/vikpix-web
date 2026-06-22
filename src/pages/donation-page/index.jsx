@@ -172,14 +172,14 @@ function DonationPreview({ user, mainColor, minCents }) {
       <div
         className="donation-preview-glow absolute -right-28 top-12 h-80 w-80 rounded-full blur-3xl"
         style={{
-          background: 'radial-gradient(circle, color-mix(in srgb, var(--preview-main) 22%, #2563ff 10%) 0%, color-mix(in srgb, var(--preview-main) 10%, transparent) 45%, transparent 74%)',
+          background: 'radial-gradient(circle, color-mix(in srgb, var(--preview-main) 70%, white 8%) 0%, color-mix(in srgb, var(--preview-main) 10%, transparent) 45%, transparent 74%)',
           animation: 'donation-preview-glow-right 22s ease-in-out infinite',
         }}
       />
       <div
         className="donation-preview-beam absolute left-[-28%] top-[64%] h-[3px] w-[144%] rounded-full blur-[2px]"
         style={{
-          background: 'linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--preview-main) 38%, transparent) 38%, color-mix(in srgb, var(--preview-main) 78%, #2563ff 22%) 52%, transparent 76%)',
+          background: 'linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--preview-main) 38%, transparent) 38%, color-mix(in srgb, var(--preview-main) 86%, white 14%) 52%, transparent 76%)',
           boxShadow: '0 0 22px color-mix(in srgb, var(--preview-main) 56%, transparent)',
           animation: 'donation-preview-beam 12s ease-in-out infinite alternate',
         }}
@@ -195,7 +195,7 @@ function DonationPreview({ user, mainColor, minCents }) {
       <div className="relative z-[1] w-full max-w-[292px]">
         <section className="rounded-2xl border border-[color-mix(in_srgb,var(--preview-main)_22%,rgba(255,255,255,0.17))] bg-[linear-gradient(180deg,rgba(10,17,27,0.88)_0%,rgba(7,11,18,0.93)_100%)] p-4 shadow-[0_28px_72px_rgba(0,0,0,0.46),inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-xl">
           <header className="mb-4 flex items-center gap-3">
-            <span className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-full bg-white/10 text-xs font-extrabold text-white shadow-[0_0_0_2px_color-mix(in_srgb,var(--preview-main)_78%,#2563ff_22%),0_0_22px_color-mix(in_srgb,var(--preview-main)_32%,transparent)]">
+            <span className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-full bg-white/10 text-xs font-extrabold text-white shadow-[0_0_0_2px_color-mix(in_srgb,var(--preview-main)_82%,white_18%),0_0_22px_color-mix(in_srgb,var(--preview-main)_32%,transparent)]">
               {avatarUrl ? <img className="size-full object-cover" src={avatarUrl} alt="" referrerPolicy="no-referrer" /> : initials}
             </span>
             <div className="min-w-0 flex-1">
@@ -232,7 +232,7 @@ function DonationPreview({ user, mainColor, minCents }) {
           <p className="m-0 mb-3 text-[11px] font-semibold text-slate-300/60">Mínimo: R$ {minCents || '0,00'}</p>
 
           <button
-            className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border-0 bg-[linear-gradient(100deg,color-mix(in_srgb,var(--preview-main)_88%,white_12%)_0%,color-mix(in_srgb,var(--preview-main)_72%,#2563ff_28%)_52%,#2563ff_100%)] text-sm font-extrabold text-white shadow-[0_16px_34px_color-mix(in_srgb,var(--preview-main)_24%,transparent),inset_0_1px_0_rgba(255,255,255,0.22)]"
+            className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border-0 bg-[linear-gradient(100deg,color-mix(in_srgb,var(--preview-main)_88%,white_12%)_0%,var(--preview-main)_52%,color-mix(in_srgb,var(--preview-main)_82%,black_18%)_100%)] text-sm font-extrabold text-white shadow-[0_16px_34px_color-mix(in_srgb,var(--preview-main)_24%,transparent),inset_0_1px_0_rgba(255,255,255,0.22)]"
             type="button"
           >
             <Send className="size-4" />
@@ -246,7 +246,7 @@ function DonationPreview({ user, mainColor, minCents }) {
         </p>
 
         <div className="mt-4 flex items-center justify-center gap-2 text-white">
-          <span className="grid size-8 place-items-center overflow-hidden rounded-full bg-[linear-gradient(135deg,color-mix(in_srgb,var(--preview-main)_88%,white_12%),#2563ff)] shadow-[0_0_24px_color-mix(in_srgb,var(--preview-main)_28%,transparent)]">
+          <span className="grid size-8 place-items-center overflow-hidden rounded-full bg-[linear-gradient(135deg,color-mix(in_srgb,var(--preview-main)_88%,white_12%),color-mix(in_srgb,var(--preview-main)_82%,black_18%))] shadow-[0_0_24px_color-mix(in_srgb,var(--preview-main)_28%,transparent)]">
             <img className="size-6 object-contain brightness-0 invert" src="/logo-sem-fundo.png" alt="" />
           </span>
           <strong className="text-xl font-black tracking-[-0.06em] text-white">VikPix</strong>
@@ -561,6 +561,7 @@ function DonationPage() {
 }
 
 export default DonationPage
+
 
 
 

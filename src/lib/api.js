@@ -1,4 +1,4 @@
-const apiUrl = import.meta.env.VITE_AUTH_API_URL || 'http://localhost:8080/api'
+﻿const apiUrl = import.meta.env.VITE_AUTH_API_URL || 'http://localhost:8080/api'
 let refreshPromise = null
 
 function getApiUrl(endpoint) {
@@ -79,4 +79,43 @@ export async function apiFetch(endpoint, options = {}) {
 
 export async function publicApiFetch(endpoint, options = {}) {
   return fetch(getApiUrl(endpoint), options)
+}
+export async function createDonation(payload) {
+  const response = await publicApiFetch('/donation', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+
+  const data = await parseApiResponse(response)
+
+  if (!response.ok) {
+    throw new Error('create-donation-failed')
+  }
+
+  return data
+}
+
+export async function getDonationStatus(donationId) {
+  const response = await publicApiFetch(`/donation/${encodeURIComponent(donationId)}/status`, {
+    headers: {
+      Accept: 'application/json',
+    },
+    cache: 'no-store',
+  })
+
+  if (response.status === 404) {
+    return null
+  }
+
+  const data = await parseApiResponse(response)
+
+  if (!response.ok) {
+    throw new Error('donation-status-failed')
+  }
+
+  return data
 }
