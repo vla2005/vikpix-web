@@ -1184,3 +1184,60 @@
     transform: rotate(360deg);
   }
 }
+
+.pix-payment-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  animation: pixPanelIn 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.pix-payment-panel h2 {
+  margin: 18px 0 0;
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+}
+
+.pix-payment-panel p {
+  margin: 8px 0 0;
+  color: rgba(203, 213, 225, 0.76);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.pix-payment-status--paid {
+  color: #86efac;
+  border-color: rgba(134, 239, 172, 0.24);
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.pix-payment-status--failed,
+.pix-payment-status--expired {
+  color: #fca5a5;
+  border-color: rgba(252, 165, 165, 0.24);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.pix-payment-panel .pix-payment-qrcode {
+  margin-top: 20px;
+}
+
+.pix-payment-panel .pix-payment-code textarea {
+  max-height: 118px;
+}
+
+@keyframes pixPanelIn {
+  from {
+    transform: translate3d(0, 10px, 0);
+    opacity: 0;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}

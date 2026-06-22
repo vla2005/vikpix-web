@@ -1,12 +1,11 @@
-﻿import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { CheckCircle2, Copy, ExternalLink, EyeOff, LoaderCircle, Mic, Send, UserRound, XCircle } from 'lucide-react'
 import { createDonation, getDonationStatus } from '@/lib/api'
 import './style.css'
 
 const apiUrl = import.meta.env.VITE_AUTH_API_URL || 'http://localhost:8080/api'
 const messageLimit = 250
-const pendingStatuses = ['PENDING']
-const failedStatuses = ['FAILED', 'CANCELED', 'EXPIRED']
+const failedStatuses = ['FAILED', 'CANCELED', 'EXPIRED', 'REJECTED']
 
 function formatCurrencyFromCents(cents) {
   const value = Number(cents || 200) / 100
@@ -54,7 +53,20 @@ function normalizeMainColor(color) {
 }
 
 function getStreamerUserId(donationPage) {
-  return donationPage?.userId || donationPage?.streamerId || donationPage?.id || ''
+  return (
+    donationPage?.userId ||
+    donationPage?.streamerId ||
+    donationPage?.ownerId ||
+    donationPage?.creatorId ||
+    donationPage?.accountId ||
+    donationPage?.user?.id ||
+    donationPage?.streamer?.id ||
+    donationPage?.owner?.id ||
+    donationPage?.profile?.userId ||
+    donationPage?.profile?.id ||
+    donationPage?.id ||
+    ''
+  )
 }
 
 function getPixQrCodeImage(qrCodeBase64) {
@@ -63,6 +75,21 @@ function getPixQrCodeImage(qrCodeBase64) {
   return qrCodeBase64.startsWith('data:image')
     ? qrCodeBase64
     : `data:image/png;base64,${qrCodeBase64}`
+}
+
+function getPaymentStage(payment) {
+  const donationStatus = payment?.donationStatus || 'PENDING'
+  const paymentStatus = payment?.paymentStatus || 'PENDING'
+
+  if (donationStatus === 'PAID' || paymentStatus === 'PAID') {
+    return 'PAID'
+  }
+
+  if (failedStatuses.includes(donationStatus) || failedStatuses.includes(paymentStatus)) {
+    return paymentStatus === 'EXPIRED' ? 'EXPIRED' : 'FAILED'
+  }
+
+  return 'PENDING'
 }
 
 function PublicDonationBackground({ accent = '#0ea5e9' }) {
@@ -97,76 +124,78 @@ function PublicDonationBackground({ accent = '#0ea5e9' }) {
   )
 }
 
-function PixPaymentDialog({ copied, payment, status, onBack, onCopy, onReset }) {
+function PixPaymentPanel({ copied, payment, onBack, onCopy, onReset }) {
   const pix = payment?.pix || {}
+  const stage = getPaymentStage(payment)
   const qrCodeImage = getPixQrCodeImage(pix.qrCodeBase64)
-  const isPending = pendingStatuses.includes(status)
-  const isPaid = status === 'PAID'
-  const isFailed = failedStatuses.includes(status)
+  const isPending = stage === 'PENDING'
+  const isPaid = stage === 'PAID'
+  const isFailed = stage === 'FAILED' || stage === 'EXPIRED'
 
   return (
-    <div className="pix-payment-overlay" role="dialog" aria-modal="true" aria-labelledby="pix-payment-title">
-      <section className="pix-payment-card">
-        <div className="pix-payment-status">
-          {isPaid ? <CheckCircle2 /> : null}
-          {isFailed ? <XCircle /> : null}
-          {isPending ? <LoaderCircle className="pix-payment-status__spinner" /> : null}
-          <span>
-            {isPaid ? 'Pagamento confirmado' : null}
-            {isFailed ? 'Pagamento não concluído' : null}
-            {isPending ? 'Aguardando pagamento' : null}
-          </span>
-        </div>
+    <section className="pix-payment-panel" aria-labelledby="pix-payment-title">
+      <div className={`pix-payment-status pix-payment-status--${stage.toLowerCase()}`}>
+        {isPaid ? <CheckCircle2 /> : null}
+        {isFailed ? <XCircle /> : null}
+        {isPending ? <LoaderCircle className="pix-payment-status__spinner" /> : null}
+        <span>
+          {isPaid ? 'Pagamento confirmado' : null}
+          {stage === 'FAILED' ? 'Pagamento não concluído' : null}
+          {stage === 'EXPIRED' ? 'Pagamento expirado' : null}
+          {isPending ? 'Aguardando pagamento' : null}
+        </span>
+      </div>
 
-        <h2 id="pix-payment-title">
-          {isPaid ? 'Obrigado pela doação!' : 'Pague com Pix'}
-        </h2>
-        <p>
-          {isPaid
-            ? 'Sua doação foi confirmada e será enviada para a live.'
+      <h2 id="pix-payment-title">
+        {isPaid ? 'Obrigado pela doação!' : 'Pague com Pix'}
+      </h2>
+      <p>
+        {isPaid
+          ? 'Sua doação foi confirmada e será enviada para a live.'
+          : isFailed
+            ? 'Não foi possível concluir esse pagamento. Você pode voltar e tentar novamente.'
             : 'Escaneie o QR Code ou copie o código Pix abaixo para concluir o pagamento.'}
-        </p>
+      </p>
 
-        {!isPaid && qrCodeImage ? (
-          <div className="pix-payment-qrcode">
-            <img src={qrCodeImage} alt="QR Code Pix" />
-          </div>
-        ) : null}
+      {!isPaid && qrCodeImage ? (
+        <div className="pix-payment-qrcode">
+          <img src={qrCodeImage} alt="QR Code Pix" />
+        </div>
+      ) : null}
 
-        {!isPaid && pix.qrCode ? (
-          <label className="pix-payment-code">
-            <span>Copia e cola Pix</span>
-            <textarea readOnly value={pix.qrCode} onFocus={(event) => event.target.select()} />
-          </label>
-        ) : null}
+      {!isPaid && pix.qrCode ? (
+        <label className="pix-payment-code">
+          <span>Copia e cola Pix</span>
+          <textarea readOnly value={pix.qrCode} onFocus={(event) => event.target.select()} />
+        </label>
+      ) : null}
 
-        {!isPaid && pix.qrCode ? (
-          <button className="pix-payment-copy" type="button" onClick={onCopy}>
-            <Copy />
-            {copied ? 'Código copiado' : 'Copiar código Pix'}
-          </button>
-        ) : null}
+      {!isPaid && pix.qrCode ? (
+        <button className="pix-payment-copy" type="button" onClick={onCopy}>
+          <Copy />
+          {copied ? 'Código copiado' : 'Copiar código Pix'}
+        </button>
+      ) : null}
 
-        {!isPaid && pix.ticketUrl ? (
-          <a className="pix-payment-link" href={pix.ticketUrl} target="_blank" rel="noreferrer">
-            <ExternalLink />
-            Abrir pagamento
-          </a>
-        ) : null}
+      {!isPaid && pix.ticketUrl ? (
+        <a className="pix-payment-link" href={pix.ticketUrl} target="_blank" rel="noreferrer">
+          <ExternalLink />
+          Abrir pagamento
+        </a>
+      ) : null}
 
-        {isPending ? (
-          <button className="pix-payment-secondary" type="button" onClick={onBack}>
-            Voltar e editar doação
-          </button>
-        ) : null}
+      {isPending ? (
+        <button className="pix-payment-secondary" type="button" onClick={onBack}>
+          Voltar e editar doação
+        </button>
+      ) : null}
 
-        {isPaid || isFailed ? (
-          <button className="pix-payment-secondary" type="button" onClick={onReset}>
-            Fazer outra doação
-          </button>
-        ) : null}
-      </section>
-    </div>
+      {isPaid || isFailed ? (
+        <button className="pix-payment-secondary" type="button" onClick={onReset}>
+          Fazer outra doação
+        </button>
+      ) : null}
+    </section>
   )
 }
 
@@ -224,36 +253,46 @@ function PublicDonationPage({ userName }) {
     return () => controller.abort()
   }, [userName])
 
+  const activeDonationId = payment?.donationId
+  const activeDonationStatus = payment?.donationStatus
+  const activePaymentStatus = payment?.paymentStatus
+
   useEffect(() => {
-    if (!payment?.donationId || payment.status !== 'PENDING') {
+    if (!activeDonationId || getPaymentStage({ donationStatus: activeDonationStatus, paymentStatus: activePaymentStatus }) !== 'PENDING') {
       return undefined
     }
 
+    let stopped = false
+
     const interval = window.setInterval(async () => {
       try {
-        const statusResponse = await getDonationStatus(payment.donationId)
+        const statusResponse = await getDonationStatus(activeDonationId)
 
-        if (!statusResponse?.status) {
+        if (!statusResponse) {
           return
         }
 
         setPayment((currentPayment) => {
-          if (!currentPayment || currentPayment.donationId !== payment.donationId) {
+          if (!currentPayment || currentPayment.donationId !== activeDonationId || stopped) {
             return currentPayment
           }
 
           return {
             ...currentPayment,
-            status: statusResponse.status,
+            donationStatus: statusResponse.donationStatus || currentPayment.donationStatus,
+            paymentStatus: statusResponse.paymentStatus || currentPayment.paymentStatus,
           }
         })
       } catch {
-        // O endpoint de status ainda pode não existir. Mantém o Pix em aberto sem quebrar a tela.
+        // Erro temporário no polling não deve quebrar a tela. A próxima iteração tenta novamente.
       }
-    }, 5000)
+    }, 4000)
 
-    return () => window.clearInterval(interval)
-  }, [payment?.donationId, payment?.status])
+    return () => {
+      stopped = true
+      window.clearInterval(interval)
+    }
+  }, [activeDonationId, activeDonationStatus, activePaymentStatus])
 
   const mainColor = normalizeMainColor(donationPage?.mainColor || '#0ea5e9')
   const resolvedUserName = donationPage?.userName || userName
@@ -267,12 +306,12 @@ function PublicDonationPage({ userName }) {
   )
 
   const isInactive = donationPage && donationPage.active === false
-  const paymentStatus = payment?.status || 'PENDING'
+  const isPaymentStep = Boolean(payment)
 
   async function handleSubmit(event) {
     event.preventDefault()
 
-    if (isInactive || creatingDonation) {
+    if (isInactive || creatingDonation || isPaymentStep) {
       return
     }
 
@@ -296,7 +335,6 @@ function PublicDonationPage({ userName }) {
     try {
       const createdDonation = await createDonation({
         userId: streamerUserId,
-        donorIp: null,
         donorName: anonymous ? null : displayName.trim() || null,
         amountCents: nextAmountCents,
         message: message.trim() || null,
@@ -305,7 +343,8 @@ function PublicDonationPage({ userName }) {
       setPayment({
         donationId: createdDonation.donationId,
         paymentId: createdDonation.paymentId,
-        status: createdDonation.status || 'PENDING',
+        donationStatus: createdDonation.donationStatus || createdDonation.status || 'PENDING',
+        paymentStatus: createdDonation.paymentStatus || createdDonation.status || 'PENDING',
         pix: createdDonation.pix || {},
       })
     } catch {
@@ -375,17 +414,6 @@ function PublicDonationPage({ userName }) {
     >
       <PublicDonationBackground accent={mainColor} />
 
-      {payment ? (
-        <PixPaymentDialog
-          copied={pixCopied}
-          payment={payment}
-          status={paymentStatus}
-          onBack={() => setPayment(null)}
-          onCopy={copyPixCode}
-          onReset={resetDonation}
-        />
-      ) : null}
-
       <div className="donation-page-content">
         <form className="donation-card" onSubmit={handleSubmit}>
           <header className="donation-profile">
@@ -407,91 +435,106 @@ function PublicDonationPage({ userName }) {
             </div>
           </header>
 
-          {!anonymous && (
-            <label className="donation-field">
-              <span className="sr-only">Seu nome</span>
-
-              <input
-                placeholder="Seu nome"
-                value={displayName}
-                onChange={(event) => setDisplayName(event.target.value)}
-                disabled={isInactive || creatingDonation}
-              />
-
-              <UserRound className="donation-field__icon" />
-            </label>
-          )}
-
-          <button
-            className={`donation-toggle ${anonymous ? 'is-active' : ''}`}
-            type="button"
-            onClick={() => {
-              setAnonymous((current) => {
-                const nextValue = !current
-
-                if (nextValue) {
-                  setDisplayName('')
-                }
-
-                return nextValue
-              })
-            }}
-            disabled={isInactive || creatingDonation}
-          >
-            <span className="donation-toggle__label">
-              <EyeOff />
-              Doar de forma anônima
-            </span>
-
-            <span className="donation-toggle__switch">
-              <span />
-            </span>
-          </button>
-
-          <label className="donation-field donation-field--textarea">
-            <span className="sr-only">Sua mensagem</span>
-
-            <textarea
-              maxLength={messageLimit}
-              placeholder="Sua mensagem..."
-              value={message}
-              onChange={(event) => setMessage(event.target.value)}
-              disabled={isInactive || creatingDonation}
+          {payment ? (
+            <PixPaymentPanel
+              copied={pixCopied}
+              payment={payment}
+              onBack={() => {
+                setPixCopied(false)
+                setPayment(null)
+              }}
+              onCopy={copyPixCode}
+              onReset={resetDonation}
             />
+          ) : (
+            <>
+              {!anonymous && (
+                <label className="donation-field">
+                  <span className="sr-only">Seu nome</span>
 
-            <Mic className="donation-field__icon donation-field__icon--textarea" />
-          </label>
+                  <input
+                    placeholder="Seu nome"
+                    value={displayName}
+                    onChange={(event) => setDisplayName(event.target.value)}
+                    disabled={isInactive || creatingDonation}
+                  />
 
-          <div className="donation-amount">
-            <strong>Valor</strong>
+                  <UserRound className="donation-field__icon" />
+                </label>
+              )}
 
-            <label className="donation-field donation-field--amount">
-              <span className="sr-only">Valor da doação</span>
+              <button
+                className={`donation-toggle ${anonymous ? 'is-active' : ''}`}
+                type="button"
+                onClick={() => {
+                  setAnonymous((current) => {
+                    const nextValue = !current
 
-              <span className="donation-amount__prefix">R$</span>
+                    if (nextValue) {
+                      setDisplayName('')
+                    }
 
-              <input
-                inputMode="numeric"
-                placeholder="0,00"
-                value={formatAmountInput(amountCents)}
-                onChange={(event) => setAmountCents(event.target.value.replace(/\D/g, ''))}
+                    return nextValue
+                  })
+                }}
                 disabled={isInactive || creatingDonation}
-              />
-            </label>
+              >
+                <span className="donation-toggle__label">
+                  <EyeOff />
+                  Doar de forma anônima
+                </span>
 
-            <p>Mínimo: {minValue}</p>
-          </div>
+                <span className="donation-toggle__switch">
+                  <span />
+                </span>
+              </button>
 
-          {donationError ? <p className="donation-form-error">{donationError}</p> : null}
+              <label className="donation-field donation-field--textarea">
+                <span className="sr-only">Sua mensagem</span>
 
-          <button
-            className="donation-submit"
-            type="submit"
-            disabled={isInactive || creatingDonation}
-          >
-            {creatingDonation ? <LoaderCircle className="donation-submit__spinner" /> : <Send />}
-            {isInactive ? 'Página indisponível' : creatingDonation ? 'Gerando Pix...' : 'Enviar PIX'}
-          </button>
+                <textarea
+                  maxLength={messageLimit}
+                  placeholder="Sua mensagem..."
+                  value={message}
+                  onChange={(event) => setMessage(event.target.value)}
+                  disabled={isInactive || creatingDonation}
+                />
+
+                <Mic className="donation-field__icon donation-field__icon--textarea" />
+              </label>
+
+              <div className="donation-amount">
+                <strong>Valor</strong>
+
+                <label className="donation-field donation-field--amount">
+                  <span className="sr-only">Valor da doação</span>
+
+                  <span className="donation-amount__prefix">R$</span>
+
+                  <input
+                    inputMode="numeric"
+                    placeholder="0,00"
+                    value={formatAmountInput(amountCents)}
+                    onChange={(event) => setAmountCents(event.target.value.replace(/\D/g, ''))}
+                    disabled={isInactive || creatingDonation}
+                  />
+                </label>
+
+                <p>Mínimo: {minValue}</p>
+              </div>
+
+              {donationError ? <p className="donation-form-error">{donationError}</p> : null}
+
+              <button
+                className="donation-submit"
+                type="submit"
+                disabled={isInactive || creatingDonation}
+              >
+                {creatingDonation ? <LoaderCircle className="donation-submit__spinner" /> : <Send />}
+                {isInactive ? 'Página indisponível' : creatingDonation ? 'Gerando Pix...' : 'Enviar PIX'}
+              </button>
+            </>
+          )}
         </form>
 
         <p className="donation-terms">
@@ -515,4 +558,3 @@ function PublicDonationPage({ userName }) {
 }
 
 export default PublicDonationPage
-
